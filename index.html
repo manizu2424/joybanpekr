@@ -1,121 +1,200 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>joyban - Portfolio & Blog</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css" />
     <!-- 구글 폰트 예시 (Noto Sans KR) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
     <!-- 아이콘 (FontAwesome CDN 예시) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
     <!-- 헤더 영역 -->
     <header class="main-header">
-        <div class="container">
-            <h1 class="logo"><a href="/">joyban</a></h1>
-            <nav class="main-nav">
-                <ul class="menu-links">
-                    <li><a href="board.html?category=ailand">AIland</a></li>
-                    <li><a href="board.html?category=works">Works</a></li>
-                    <li><a href="board.html?category=vision">Vision</a></li>
-                    <li><a href="board.html?category=job">Job</a></li>
-                </ul>
-                <ul class="social-links">
-                    <li><a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a></li>
-                    <li><a href="#" target="_blank" title="GitHub"><i class="fab fa-github"></i></a></li>
-                </ul>
-                <a href="#" class="admin-login-btn"><i class="fas fa-lock"></i></a>
-            </nav>
-        </div>
+      <div class="container">
+        <h1 class="logo"><a href="/">joyban</a></h1>
+        <button class="mobile-menu-toggle" aria-label="메뉴 열기">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav class="main-nav">
+          <ul class="menu-links">
+            <li><a href="board.html?category=ailand">AIland</a></li>
+            <li><a href="board.html?category=works">Works</a></li>
+            <li><a href="board.html?category=vision">Vision</a></li>
+            <li><a href="board.html?category=job">Job</a></li>
+          </ul>
+          <ul class="social-links">
+            <li>
+              <a href="#" target="_blank" title="Instagram"
+                ><i class="fab fa-instagram"></i
+              ></a>
+            </li>
+            <li>
+              <a href="#" target="_blank" title="GitHub"
+                ><i class="fab fa-github"></i
+              ></a>
+            </li>
+          </ul>
+          <a href="#" class="admin-login-btn"><i class="fas fa-lock"></i></a>
+        </nav>
+      </div>
     </header>
 
     <!-- 히어로 섹션 (간단한 인트로) -->
     <section class="hero-section">
-        <div class="container">
-            <h2>Creative Developer & AI Enthusiast</h2>
-            <p>Welcome to my digital playground.</p>
-        </div>
+      <div class="container">
+        <h2>Creative Developer & AI Enthusiast</h2>
+        <p>Welcome to my digital playground.</p>
+      </div>
     </section>
 
     <!-- 프로필 섹션 -->
     <section class="profile-section">
-        <div class="container">
-            <div class="profile-wrapper">
-                <div class="profile-image">
-                    <!-- 플레이스홀더 이미지 -->
-                    <div class="img-placeholder">Profile IMG</div>
-                    <!-- <img src="images/profile.jpg" alt="Profile Picture"> -->
-                </div>
-                <div class="profile-text">
-                    <h3>Hello, I'm Joyban.</h3>
-                    <p>
-                        이곳은 저의 포트폴리오와 생각을 정리하는 공간입니다.<br>
-                        AI 기술과 웹 개발을 접목하여 새로운 가치를 만들어내는 것에 관심이 많습니다.
-                    </p>
-                </div>
-            </div>
+      <div class="container">
+        <div class="profile-wrapper">
+          <div class="profile-image">
+            <!-- 플레이스홀더 이미지 -->
+            <div class="img-placeholder">Profile IMG</div>
+            <!-- <img src="images/profile.jpg" alt="Profile Picture"> -->
+          </div>
+          <div class="profile-text">
+            <h3>Hello, I'm Joyban.</h3>
+            <p>
+              이곳은 저의 포트폴리오와 생각을 정리하는 공간입니다.<br />
+              AI 기술과 웹 개발을 접목하여 새로운 가치를 만들어내는 것에 관심이
+              많습니다.
+            </p>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- 메인 컨텐츠 그리드 (AIland, Works, Vision, Job) -->
     <main class="content-grid-section">
-        <div class="container">
-            <div class="grid-container">
-                <!-- AIland Section -->
-                <article class="grid-item item-ailand" onclick="location.href='board.html?category=ailand'">
-                    <div class="content">
-                        <h3>AIland</h3>
-                        <p>AI Insights & Tech Blog</p>
-                        <span class="post-count" data-category="ailand" style="display:block; margin-bottom:10px; font-size:0.9rem; color:#666;">0 Posts</span>
-                        <span class="btn-link">View More <i class="fas fa-arrow-right"></i></span>
-                    </div>
-                </article>
-
-                <!-- Works Section -->
-                <article class="grid-item item-works" onclick="location.href='board.html?category=works'">
-                    <div class="content">
-                        <h3>Works</h3>
-                        <p>Project Portfolio</p>
-                        <span class="post-count" data-category="works" style="display:block; margin-bottom:10px; font-size:0.9rem; color:#666;">0 Posts</span>
-                        <span class="btn-link">View More <i class="fas fa-arrow-right"></i></span>
-                    </div>
-                </article>
-
-                <!-- Vision Section -->
-                <article class="grid-item item-vision" onclick="location.href='board.html?category=vision'">
-                    <div class="content">
-                        <h3>Vision</h3>
-                        <p>Future & Philosophy</p>
-                        <span class="post-count" data-category="vision" style="display:block; margin-bottom:10px; font-size:0.9rem; color:#666;">0 Posts</span>
-                        <span class="btn-link">View More <i class="fas fa-arrow-right"></i></span>
-                    </div>
-                </article>
-
-                <!-- Job Section -->
-                <article class="grid-item item-job" onclick="location.href='board.html?category=job'">
-                    <div class="content">
-                        <h3>Job</h3>
-                        <p>Resume & Career</p>
-                        <span class="post-count" data-category="job" style="display:block; margin-bottom:10px; font-size:0.9rem; color:#666;">0 Posts</span>
-                        <span class="btn-link">View More <i class="fas fa-arrow-right"></i></span>
-                    </div>
-                </article>
+      <div class="container">
+        <div class="grid-container">
+          <!-- AIland Section -->
+          <article
+            class="grid-item item-ailand"
+            onclick="location.href='board.html?category=ailand'"
+          >
+            <div class="content">
+              <h3>AIland</h3>
+              <p>AI Insights & Tech Blog</p>
+              <span
+                class="post-count"
+                data-category="ailand"
+                style="
+                  display: block;
+                  margin-bottom: 10px;
+                  font-size: 0.9rem;
+                  color: #666;
+                "
+                >0 Posts</span
+              >
+              <span class="btn-link"
+                >View More <i class="fas fa-arrow-right"></i
+              ></span>
             </div>
+          </article>
+
+          <!-- Works Section -->
+          <article
+            class="grid-item item-works"
+            onclick="location.href='board.html?category=works'"
+          >
+            <div class="content">
+              <h3>Works</h3>
+              <p>Project Portfolio</p>
+              <span
+                class="post-count"
+                data-category="works"
+                style="
+                  display: block;
+                  margin-bottom: 10px;
+                  font-size: 0.9rem;
+                  color: #666;
+                "
+                >0 Posts</span
+              >
+              <span class="btn-link"
+                >View More <i class="fas fa-arrow-right"></i
+              ></span>
+            </div>
+          </article>
+
+          <!-- Vision Section -->
+          <article
+            class="grid-item item-vision"
+            onclick="location.href='board.html?category=vision'"
+          >
+            <div class="content">
+              <h3>Vision</h3>
+              <p>Future & Philosophy</p>
+              <span
+                class="post-count"
+                data-category="vision"
+                style="
+                  display: block;
+                  margin-bottom: 10px;
+                  font-size: 0.9rem;
+                  color: #666;
+                "
+                >0 Posts</span
+              >
+              <span class="btn-link"
+                >View More <i class="fas fa-arrow-right"></i
+              ></span>
+            </div>
+          </article>
+
+          <!-- Job Section -->
+          <article
+            class="grid-item item-job"
+            onclick="location.href='board.html?category=job'"
+          >
+            <div class="content">
+              <h3>Job</h3>
+              <p>Resume & Career</p>
+              <span
+                class="post-count"
+                data-category="job"
+                style="
+                  display: block;
+                  margin-bottom: 10px;
+                  font-size: 0.9rem;
+                  color: #666;
+                "
+                >0 Posts</span
+              >
+              <span class="btn-link"
+                >View More <i class="fas fa-arrow-right"></i
+              ></span>
+            </div>
+          </article>
         </div>
+      </div>
     </main>
 
     <!-- 푸터 -->
     <footer class="main-footer">
-        <div class="container">
-            <p>&copy; 2026 Joyban. All rights reserved.</p>
-        </div>
+      <div class="container">
+        <p>&copy; 2026 Joyban. All rights reserved.</p>
+      </div>
     </footer>
 
     <script src="js/app.js"></script>
-</body>
+  </body>
 </html>

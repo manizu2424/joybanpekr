@@ -1,91 +1,118 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>인공지능이 바꾸는 웹 개발의 미래 - Joyban</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
     <!-- 헤더 영역 -->
     <header class="main-header">
-        <div class="container">
-            <h1 class="logo"><a href="index.html">joyban</a></h1>
-            <nav class="main-nav">
-                <ul class="menu-links">
-                    <li><a href="board.html?category=ailand">AIland</a></li>
-                    <li><a href="board.html?category=works">Works</a></li>
-                    <li><a href="board.html?category=vision">Vision</a></li>
-                    <li><a href="board.html?category=job">Job</a></li>
-                </ul>
-                <ul class="social-links">
-                    <li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
-                    <li><a href="#" target="_blank"><i class="fab fa-github"></i></a></li>
-                </ul>
-                <a href="#" class="admin-login-btn"><i class="fas fa-lock"></i></a>
-            </nav>
-        </div>
+      <div class="container">
+        <h1 class="logo"><a href="index.html">joyban</a></h1>
+        <button class="mobile-menu-toggle" aria-label="메뉴 열기">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav class="main-nav">
+          <ul class="menu-links">
+            <li><a href="board.html?category=ailand">AIland</a></li>
+            <li><a href="board.html?category=works">Works</a></li>
+            <li><a href="board.html?category=vision">Vision</a></li>
+            <li><a href="board.html?category=job">Job</a></li>
+          </ul>
+          <ul class="social-links">
+            <li>
+              <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            </li>
+            <li>
+              <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+            </li>
+          </ul>
+          <a href="#" class="admin-login-btn"><i class="fas fa-lock"></i></a>
+        </nav>
+      </div>
     </header>
 
     <!-- 상세 페이지 컨텐츠 -->
     <main class="view-section">
-        <div class="container view-container">
-            
-            <!-- 게시글 헤더 -->
-            <div class="view-header">
-                <span class="category-badge">AIland</span>
-                <h2 class="view-title">인공지능이 바꾸는 웹 개발의 미래</h2>
-                <div class="view-meta">
-                    <span class="date">2026.01.09 14:30</span>
-                </div>
-            </div>
-
-            <hr class="divider">
-
-            <!-- 게시글 본문 -->
-            <div class="view-content">
-                <p>
-                    <!-- 본문 내용은 JS로 로드됩니다 -->
-                </p>
-                <br>
-                <!-- 미디어 표시 영역 (이미지, 비디오 등) -->
-                <div class="content-media-wrapper"></div>
-            </div>
-
-            <!-- 첨부파일 목록 (다운로드) -->
-            <div class="attachment-list" style="margin-top: 2rem; padding: 1rem; background: #f9f9f9; border-radius: 5px; display: none;">
-                <strong><i class="fas fa-paperclip"></i> 첨부파일</strong>
-                <ul id="file-download-list" style="list-style: none; padding-left: 0; margin-top: 0.5rem;"></ul>
-            </div>
-
-            <hr class="divider">
-
-            <!-- 관리자 컨트롤 (JS로 제어) -->
-            <div id="admin-controls" style="display: none; text-align: right; margin-bottom: 1rem;">
-                <button id="btn-edit" class="btn-admin">수정</button>
-                <button id="btn-delete" class="btn-admin delete">삭제</button>
-            </div>
-
-            <!-- 하단 네비게이션 -->
-            <div class="view-nav">
-                <a href="board.html" class="btn-list">목록으로</a>
-            </div>
-
+      <div class="container view-container">
+        <!-- 게시글 헤더 -->
+        <div class="view-header">
+          <span class="category-badge">AIland</span>
+          <h2 class="view-title">인공지능이 바꾸는 웹 개발의 미래</h2>
+          <div class="view-meta">
+            <span class="date">2026.01.09 14:30</span>
+          </div>
         </div>
+
+        <hr class="divider" />
+
+        <!-- 게시글 본문 -->
+        <div class="view-content">
+          <p>
+            <!-- 본문 내용은 JS로 로드됩니다 -->
+          </p>
+          <br />
+          <!-- 미디어 표시 영역 (이미지, 비디오 등) -->
+          <div class="content-media-wrapper"></div>
+        </div>
+
+        <!-- 첨부파일 목록 (다운로드) -->
+        <div
+          class="attachment-list"
+          style="
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 5px;
+            display: none;
+          "
+        >
+          <strong><i class="fas fa-paperclip"></i> 첨부파일</strong>
+          <ul
+            id="file-download-list"
+            style="list-style: none; padding-left: 0; margin-top: 0.5rem"
+          ></ul>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- 관리자 컨트롤 (JS로 제어) -->
+        <div
+          id="admin-controls"
+          style="display: none; text-align: right; margin-bottom: 1rem"
+        >
+          <button id="btn-edit" class="btn-admin">수정</button>
+          <button id="btn-delete" class="btn-admin delete">삭제</button>
+        </div>
+
+        <!-- 하단 네비게이션 -->
+        <div class="view-nav">
+          <a href="board.html" class="btn-list">목록으로</a>
+        </div>
+      </div>
     </main>
 
     <!-- 푸터 -->
     <footer class="main-footer">
-        <div class="container">
-            <p>&copy; 2026 Joyban. All rights reserved.</p>
-        </div>
+      <div class="container">
+        <p>&copy; 2026 Joyban. All rights reserved.</p>
+      </div>
     </footer>
 
     <script src="js/app.js"></script>
-</body>
+  </body>
 </html>

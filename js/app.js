@@ -550,3 +550,62 @@ async function loginAdmin(username, password) {
         UIManager.showToast('로그인 처리 중 오류가 발생했습니다.', 'error');
     }
 }
+
+/**
+ * Mobile Menu Toggle
+ */
+function initMobileMenu() {
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    const nav = document.querySelector('.main-nav');
+    
+    if (!toggle || !nav) return;
+
+    // Create overlay element
+    const overlay = document.createElement('div');
+    overlay.className = 'mobile-menu-overlay';
+    document.body.appendChild(overlay);
+
+    // Toggle menu
+    toggle.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+        nav.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
+    });
+
+    // Close menu when clicking overlay
+    overlay.addEventListener('click', () => {
+        toggle.classList.remove('active');
+        nav.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Close menu when clicking menu links
+    const menuLinks = nav.querySelectorAll('.menu-links a, .social-links a, .admin-login-btn');
+    menuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            toggle.classList.remove('active');
+            nav.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    });
+
+    // Close menu on window resize if open
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && nav.classList.contains('active')) {
+            toggle.classList.remove('active');
+            nav.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+}
+
+// Initialize mobile menu on page load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+} else {
+    initMobileMenu();
+}
