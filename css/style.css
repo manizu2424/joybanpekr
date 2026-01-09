@@ -64,7 +64,27 @@ ul {
 .main-nav {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
+}
+
+.menu-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-links li a {
+  text-decoration: none;
+  color: var(--accent-color);
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.menu-links li a:hover {
+  color: #6c63ff;
 }
 
 .social-links {
