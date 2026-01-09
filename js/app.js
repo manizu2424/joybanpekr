@@ -442,7 +442,11 @@ async function loadPostDetail(id) {
             document.querySelector('.view-title').innerText = post.title;
             document.querySelector('.category-badge').innerText = post.category.toUpperCase();
             document.querySelector('.view-meta .date').innerText = post.created_at;
-            document.querySelector('.view-content').innerHTML = post.content.replace(/\n/g, '<br>');
+            //document.querySelector('.view-content').innerHTML = post.content.replace(/\n/g, '<br>');
+            const contentP = document.querySelector('.view-content p');
+            if (contentP) {
+                contentP.innerHTML = post.content.replace(/\n/g, '<br>');
+            }
 
             // 미디어 및 첨부파일 처리
             const mediaWrapper = document.querySelector('.content-media-wrapper');
@@ -466,15 +470,19 @@ async function loadPostDetail(id) {
                         if (mediaWrapper) {
                             const img = document.createElement('img');
                             img.src = cleanPath;
-                            img.style.maxWidth = '100%';
+                            img.style.width = '50%';
+                            img.style.maxWidth = '50%';
                             img.style.marginBottom = '1rem';
                             img.style.display = 'block'; 
                             img.style.margin = '0 auto 1rem auto'; // 중앙 정렬
+                            img.style.cursor = 'pointer';
                             
                             img.onerror = () => {
                                 console.error('Image load failed:', cleanPath);
                                 img.alt = '이미지를 불러올 수 없습니다.';
                             };
+
+                            img.onclick = () => window.open(cleanPath, '_blank');
 
                             mediaWrapper.appendChild(img);
                         }
