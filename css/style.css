@@ -217,7 +217,8 @@ ul {
 .hero-section {
   padding: 4rem 0;
   text-align: center;
-  background-color: var(--white);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -303,7 +304,7 @@ ul {
 }
 
 /* 각 섹션별 포인트 컬러 (선택사항) */
-.item-ailand {
+.item-aiworld {
   border-top: 4px solid #3498db;
 }
 .item-works {
@@ -312,7 +313,7 @@ ul {
 .item-vision {
   border-top: 4px solid #f1c40f;
 }
-.item-job {
+.item-skillup {
   border-top: 4px solid #2ecc71;
 }
 
@@ -406,6 +407,8 @@ ul {
   background-color: var(--white);
   padding: 3rem 0 2rem;
   text-align: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
   border-bottom: 1px solid var(--border-color);
 }
 
