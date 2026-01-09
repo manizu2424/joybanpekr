@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 글쓰기 - Joyban</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .write-container { max-width: 800px; margin: 3rem auto; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        .form-control { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
+        textarea.form-control { height: 300px; resize: vertical; }
+        .btn-submit { width: 100%; padding: 1rem; background: #2c3e50; color: #fff; border: none; border-radius: 4px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+        .btn-submit:hover { background: #1a252f; }
+        .file-list { margin-top: 0.5rem; font-size: 0.9rem; color: #666; }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <h1 class="logo"><a href="index.html">joyban Admin</a></h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="write-container">
+            <h2 id="pageTitle">새 게시글 작성</h2>
+            <form id="writeForm" enctype="multipart/form-data">
+                <input type="hidden" name="id" id="postId">
+                <div class="form-group">
+                    <label for="category">카테고리</label>
+                    <select name="category" id="category" class="form-control" required>
+                        <option value="ailand">AIland</option>
+                        <option value="works">Works</option>
+                        <option value="vision">Vision</option>
+                        <option value="job">Job</option>
+                        <option value="profile">Profile</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="title">제목</label>
+                    <input type="text" name="title" id="title" class="form-control" required placeholder="제목을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="content">내용</label>
+                    <textarea name="content" id="content" class="form-control" required placeholder="내용을 입력하세요"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="files">파일 첨부 (다중 선택 가능)</label>
+                    <input type="file" name="files[]" id="files" class="form-control" multiple accept="image/*,video/*,application/pdf">
+                    <div class="file-list" id="fileList"></div>
+                    <div id="existingFiles" style="margin-top: 10px; color: #666;"></div>
+                </div>
+                <button type="submit" class="btn-submit">저장하기</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+
+            if (postId) {
+                document.getElementById('pageTitle').textContent = '게시글 수정';
+                document.getElementById('postId').value = postId;
+                await loadPostData(postId);
+            }
+        });
+
+        async function loadPostData(id) {
+            try {
+                const response = await fetch(`api/posts/detail.php?id=${id}`);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const post = result.data;
+                    document.getElementById('category').value = post.category;
+                    document.getElementById('title').value = post.title;
+                    document.getElementById('content').value = post.content;
+                    
+                    // 기존 파일 목록 표시 (삭제 기능은 추후 구현 필요 시 추가)
+                    if (post.media && post.media.length > 0) {
+                        const existingDiv = document.getElementById('existingFiles');
+                        existingDiv.innerHTML = '<strong>기존 첨부파일:</strong><br>';
+                        post.media.forEach(file => {
+                            existingDiv.innerHTML += `📄 ${file.original_name}<br>`;
+                        });
+                    }
+                } else {
+                    UIManager.showToast('게시글 정보를 불러올 수 없습니다.', 'error');
+                    setTimeout(() => location.href = 'index.html', 1000);
+                }
+            } catch (error) {
+                console.error('Error loading post:', error);
+            }
+        }
+
+        document.getElementById('writeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const postId = document.getElementById('postId').value;
+            const url = postId ? 'api/posts/update.php' : 'api/posts/create.php';
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    UIManager.showToast(postId ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.', 'success');
+                    const category = document.getElementById('category').value;
+                    setTimeout(() => {
+                        location.href = postId ? `view.html?id=${result.post_id}` : `board.html?category=${category}`;
+                    }, 1000);
+                } else {
+                    UIManager.showToast('오류: ' + result.message, 'error');
+                }
+            } catch (error) {
+                UIManager.showToast('서버 통신 중 오류가 발생했습니다. 로그인이 되어있는지 확인해주세요.', 'error');
+            }
+        });
+
+        // 파일 선택 시 목록 표시
+        document.getElementById('files').addEventListener('change', (e) => {
+            const list = document.getElementById('fileList');
+            list.innerHTML = '';
+            for (const file of e.target.files) {
+                const item = document.createElement('div');
+                item.textContent = file.name;
+                list.appendChild(item);
+            }
+        });
+    </script>
+    <script src="js/app.js"></script>
+</body>
+</html>
