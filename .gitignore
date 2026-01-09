@@ -1,0 +1,55 @@
+# Database configuration
+#api/config/db.php
+
+# Upload directory
+uploads/
+api/uploads/
+
+# System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# Logs
+*.log
+logs/
+error_log
+
+# Environment variables
+.env
+.env.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Node modules (if using any build tools)
+node_modules/
+
+# PHP
+vendor/
+composer.phar
+composer.lock
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Cache
+cache/
+*.cache
