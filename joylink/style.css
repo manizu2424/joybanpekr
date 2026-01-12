@@ -1,0 +1,360 @@
+:root {
+    --bg-color: #0f172a;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-color: #e2e8f0;
+    --accent-color: #06b6d4; /* Cyan */
+    --accent-glow: 0 0 10px rgba(6, 182, 212, 0.5);
+    --secondary-accent: #ec4899; /* Pink */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Background Effects */
+.background-circles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+}
+
+.circle-1 {
+    width: 400px;
+    height: 400px;
+    background: var(--accent-color);
+    top: -100px;
+    left: -100px;
+}
+
+.circle-2 {
+    width: 300px;
+    height: 300px;
+    background: var(--secondary-accent);
+    bottom: -50px;
+    right: -50px;
+}
+
+/* Header */
+header {
+    width: 100%;
+    max-width: 1200px;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: var(--accent-glow);
+}
+
+nav {
+    display: flex;
+    gap: 1rem;
+    background: var(--glass-bg);
+    padding: 0.5rem;
+    border-radius: 50px;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.nav-btn.active {
+    background: var(--accent-color);
+    color: #fff;
+    box-shadow: var(--accent-glow);
+}
+
+/* Main Content */
+main {
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 2rem;
+    flex: 1;
+}
+
+.controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+}
+
+.add-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--accent-color);
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.add-btn:hover {
+    background: rgba(6, 182, 212, 0.1);
+    box-shadow: var(--accent-glow);
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding-bottom: 4rem;
+}
+
+/* Cards */
+.card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 120px;
+    position: relative;
+    text-decoration: none;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    margin-top: 10px;
+    word-break: break-word;
+}
+
+.card-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.card:hover .card-actions {
+    opacity: 1;
+}
+
+.action-btn {
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: #fff;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.action-btn:hover {
+    background: var(--accent-color);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.modal.hidden {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    background: #1e293b;
+    border: 1px solid var(--glass-border);
+    padding: 2rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content h2 {
+    color: #fff;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 1rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.input-group input, 
+.input-group select {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: #fff;
+    outline: none;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: var(--accent-color);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn.cancel {
+    background: transparent;
+    color: #94a3b8;
+}
+
+.btn.cancel:hover {
+    color: #fff;
+}
+
+.btn.save {
+    background: var(--accent-color);
+    color: #fff;
+}
+
+.btn.save:hover {
+    background: #0891b2;
+}
+
+/* Reorder Controls */
+.icon-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: #94a3b8;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.icon-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.icon-btn.active {
+    background: var(--accent-color);
+    color: #fff;
+    box-shadow: var(--accent-glow);
+    border-color: var(--accent-color);
+}
+
+/* Reorder Mode Styles */
+body.reorder-mode .card {
+    cursor: grab;
+    border-style: dashed;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+body.reorder-mode .card:active {
+    cursor: grabbing;
+}
+
+body.reorder-mode .card-actions {
+    display: none !important; /* Hide actions in reorder mode */
+}
+
+body.reorder-mode .card a {
+    pointer-events: none; /* Disable links in reorder mode */
+}
+
+.card.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+    box-shadow: 0 0 15px var(--accent-color);
+    border-color: var(--accent-color);
+}

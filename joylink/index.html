@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Joyban_Link</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="background-circles">
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+    </div>
+
+    <header>
+      <div class="logo">Joyban_Link</div>
+      <nav>
+        <button class="nav-btn active" onclick="setCategory('aisite')">
+          AI Site
+        </button>
+        <button class="nav-btn" onclick="setCategory('mysite')">My Site</button>
+      </nav>
+    </header>
+
+    <main>
+      <div class="controls">
+        <button
+          id="reorder-btn"
+          class="icon-btn"
+          onclick="toggleReorderMode()"
+          title="Toggle Reorder Mode"
+        >
+          ⇅
+        </button>
+        <button class="add-btn" onclick="openModal()">+ Add Link</button>
+      </div>
+
+      <div id="link-grid" class="grid-container">
+        <!-- 자바스크립트로 링크들이 여기에 렌더링 됩니다 -->
+      </div>
+    </main>
+
+    <!-- 모달 창 -->
+    <div id="modal" class="modal hidden">
+      <div class="modal-content glass">
+        <h2 id="modal-title">Add New Link</h2>
+        <input type="hidden" id="link-id" />
+        <div class="input-group">
+          <label>Site Name</label>
+          <input type="text" id="site-name" placeholder="Enter site name" />
+        </div>
+        <div class="input-group">
+          <label>URL</label>
+          <input type="url" id="site-url" placeholder="https://example.com" />
+        </div>
+        <div class="input-group">
+          <label>Category</label>
+          <select id="site-category">
+            <option value="aisite">AI Site</option>
+            <option value="mysite">My Site</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button class="btn cancel" onclick="closeModal()">Cancel</button>
+          <button class="btn save" onclick="saveLink()">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
