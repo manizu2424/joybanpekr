@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Joyban의 개인 홈페이지입니다. AI 활용, 웹 개발, 자동화, 개인 프로젝트와 배움 기록을 정리합니다."
+    />
+    <meta name="author" content="Joyban" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.joyban.pe.kr/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Joyban" />
+    <meta property="og:title" content="Joyban - AI, Web, Automation 기록 저장소" />
+    <meta
+      property="og:description"
+      content="만든 것과 배운 것을 정리하는 Joyban의 개인 공간입니다."
+    />
+    <meta property="og:url" content="https://www.joyban.pe.kr/" />
+    <meta property="og:image" content="https://www.joyban.pe.kr/images/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Joyban - AI, Web, Automation 기록 저장소" />
+    <meta
+      name="twitter:description"
+      content="AI 활용, 웹 개발, 자동화, 개인 프로젝트 기록을 정리합니다."
+    />
+    <meta name="twitter:image" content="https://www.joyban.pe.kr/images/og-image.png" />
+    <meta name="theme-color" content="#0a0b0d" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Joyban - AI, Web, Automation 기록 저장소</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- 구글 폰트 예시 (Noto Sans KR) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- 아이콘 (FontAwesome CDN 예시) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- 헤더 영역 -->
+    <header class="main-header">
+      <div class="container">
+        <h1 class="logo"><a href="/">joyban.pe.kr</a></h1>
+        <button class="mobile-menu-toggle" aria-label="메뉴 열기">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav class="main-nav">
+          <ul class="menu-links">
+            <li><a href="board.html?category=aiworld">AI 이야기</a></li>
+            <li><a href="board.html?category=works">만든 것들</a></li>
+            <li><a href="board.html?category=vision">생각정리</a></li>
+            <li><a href="board.html?category=skillup">배움노트</a></li>
+          </ul>
+          <ul class="social-links">
+            <li>
+              <a href="#" target="_blank" title="Instagram"
+                ><i class="fab fa-instagram"></i
+              ></a>
+            </li>
+            <li>
+              <a href="#" target="_blank" title="GitHub"
+                ><i class="fab fa-github"></i
+              ></a>
+            </li>
+          </ul>
+          <a href="#" class="admin-login-btn"><i class="fas fa-lock"></i></a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero-section">
+      <div class="container">
+        <span class="hero-kicker">Independent maker &amp; learner</span>
+        <h2>만들고,<br /><span>배우고, 기록합니다.</span></h2>
+        <p>AI와 웹 기술을 실제 프로젝트에 적용하며 얻은 과정과 결과를 정리하는 개인 아카이브입니다.</p>
+        <div class="hero-actions">
+          <a href="board.html?category=works" class="btn-primary">만든 것들 보기 <i class="fas fa-arrow-right"></i></a>
+          <a href="board.html?category=aiworld" class="btn-secondary">AI 이야기 읽기</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-section">
+      <div class="container">
+        <div class="profile-wrapper">
+          <div class="profile-image">
+            <img src="images/profile-placeholder.svg" alt="Joyban 프로필 이미지" />
+          </div>
+          <div class="profile-text">
+            <h3>기술을 생활의 도구로 만드는 사람</h3>
+            <p>
+              AI 활용, 웹 개발, 자동화를 직접 시도하고 결과를 남깁니다.<br />
+              완성된 작업뿐 아니라 시행착오와 배운 점까지 솔직하게 기록합니다.
+            </p>
+            <ul class="profile-keywords" aria-label="관심 분야">
+              <li>AI 활용</li>
+              <li>웹 개발</li>
+              <li>자동화</li>
+              <li>개인 프로젝트</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="content-grid-section">
+      <div class="container">
+        <div class="section-heading">
+          <h2>기록 둘러보기</h2>
+          <p>SELECTED ARCHIVE / 2026</p>
+        </div>
+        <div class="grid-container">
+          <!-- AI 이야기 Section -->
+          <article
+            class="grid-item item-aiworld"
+            data-index="01"
+            onclick="location.href='board.html?category=aiworld'"
+          >
+            <div class="content">
+              <h3>AI 이야기</h3>
+              <p>AI 활용, 도구 리뷰, 기술 실험 기록</p>
+              <span class="post-count" data-category="aiworld">0개 글</span>
+              <span class="post-latest" data-latest-category="aiworld">최근 글 준비 중</span>
+              <span class="btn-link"
+                >더 보기 <i class="fas fa-arrow-right"></i
+              ></span>
+            </div>
+          </article>
+
+          <!-- 만든 것들 Section -->
+          <article
+            class="grid-item item-works"
+            data-index="02"
+            onclick="location.href='board.html?category=works'"
+          >
+            <div class="content">
+              <h3>만든 것들</h3>
+              <p>직접 만든 프로젝트와 작업물</p>
+              <span class="post-count" data-category="works">0개 글</span>
+              <span class="post-latest" data-latest-category="works">최근 글 준비 중</span>
+              <span class="btn-link"
+                >더 보기 <i class="fas fa-arrow-right"></i
+              ></span>
+            </div>
+          </article>
+
+          <!-- 생각정리 Section -->
+          <article
+            class="grid-item item-vision"
+            data-index="03"
+            onclick="location.href='board.html?category=vision'"
+          >
+            <div class="content">
+              <h3>생각정리</h3>
+              <p>목표, 회고, 방향성에 대한 기록</p>
+              <span class="post-count" data-category="vision">0개 글</span>
+              <span class="post-latest" data-latest-category="vision">최근 글 준비 중</span>
+              <span class="btn-link"
+                >더 보기 <i class="fas fa-arrow-right"></i
+              ></span>
+            </div>
+          </article>
+
+          <!-- 배움노트 Section -->
+          <article
+            class="grid-item item-skillup"
+            data-index="04"
+            onclick="location.href='board.html?category=skillup'"
+          >
+            <div class="content">
+              <h3>배움노트</h3>
+              <p>학습 기록, 개발 메모, 문제 해결 노트</p>
+              <span class="post-count" data-category="skillup">0개 글</span>
+              <span class="post-latest" data-latest-category="skillup">최근 글 준비 중</span>
+              <span class="btn-link"
+                >더 보기 <i class="fas fa-arrow-right"></i
+              ></span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="main-footer">
+      <div class="container">
+        <p>&copy; 2026 Joyban. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
+

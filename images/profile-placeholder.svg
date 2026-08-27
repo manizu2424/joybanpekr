@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Joyban profile placeholder</title>
+  <desc id="desc">A simple Joyban profile mark for the personal homepage.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a8edea"/>
+      <stop offset="1" stop-color="#fed6e3"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#2c3e50" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect width="320" height="320" rx="160" fill="url(#bg)"/>
+  <circle cx="160" cy="160" r="116" fill="#ffffff" opacity="0.82" filter="url(#shadow)"/>
+  <path d="M99 103h46v102c0 31-20 52-51 52-22 0-39-10-50-28l28-23c6 11 13 17 24 17 12 0 18-8 18-23v-69H99v-28z" fill="#2c3e50"/>
+  <path d="M169 103h52c31 0 51 16 51 42 0 15-8 27-23 34 19 6 30 20 30 40 0 31-22 50-58 50h-52V103zm47 65c15 0 24-8 24-21 0-12-9-20-24-20h-16v41h16zm3 75c17 0 27-9 27-25s-10-25-27-25h-19v50h19z" fill="#2c3e50"/>
+</svg>

@@ -1,0 +1,25 @@
+# Runtime uploads
+/uploads/*
+!/uploads/.gitkeep
+
+# Local secrets and environment overrides
+.env
+.env.*
+!.env.example
+/api/config/db.php
+
+# Logs and local runtime files
+*.log
+*.tmp
+*.cache
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
