@@ -1,17 +1,89 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
-  <title id="title">Joyban profile placeholder</title>
-  <desc id="desc">A simple Joyban profile mark for the personal homepage.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-labelledby="ai-title ai-desc">
+  <title id="ai-title">Joyban AI profile</title>
+  <desc id="ai-desc">AI 스타일의 Joyban 프로필 이미지 — 신경망 노드와 민트 컬러 테마.</desc>
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#a8edea"/>
-      <stop offset="1" stop-color="#fed6e3"/>
-    </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#2c3e50" flood-opacity="0.18"/>
+    <!-- 배경 그라디언트 -->
+    <radialGradient id="bg-radial" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#0f2027"/>
+      <stop offset="60%" stop-color="#0d1a1f"/>
+      <stop offset="100%" stop-color="#080c0e"/>
+    </radialGradient>
+    <!-- 민트 글로우 그라디언트 -->
+    <radialGradient id="glow-center" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#78f0cf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#78f0cf" stop-opacity="0"/>
+    </radialGradient>
+    <!-- 선 색상 -->
+    <filter id="node-glow">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="center-glow">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
-  <rect width="320" height="320" rx="160" fill="url(#bg)"/>
-  <circle cx="160" cy="160" r="116" fill="#ffffff" opacity="0.82" filter="url(#shadow)"/>
-  <path d="M99 103h46v102c0 31-20 52-51 52-22 0-39-10-50-28l28-23c6 11 13 17 24 17 12 0 18-8 18-23v-69H99v-28z" fill="#2c3e50"/>
-  <path d="M169 103h52c31 0 51 16 51 42 0 15-8 27-23 34 19 6 30 20 30 40 0 31-22 50-58 50h-52V103zm47 65c15 0 24-8 24-21 0-12-9-20-24-20h-16v41h16zm3 75c17 0 27-9 27-25s-10-25-27-25h-19v50h19z" fill="#2c3e50"/>
+
+  <!-- 배경 원 -->
+  <circle cx="160" cy="160" r="160" fill="url(#bg-radial)"/>
+
+  <!-- 중앙 글로우 -->
+  <circle cx="160" cy="160" r="90" fill="url(#glow-center)"/>
+
+  <!-- 신경망 연결선 -->
+  <g stroke="#78f0cf" stroke-opacity="0.25" stroke-width="1" fill="none">
+    <!-- 중앙 → 외부 노드 -->
+    <line x1="160" y1="160" x2="90"  y2="80"/>
+    <line x1="160" y1="160" x2="230" y2="75"/>
+    <line x1="160" y1="160" x2="255" y2="160"/>
+    <line x1="160" y1="160" x2="230" y2="245"/>
+    <line x1="160" y1="160" x2="90"  y2="248"/>
+    <line x1="160" y1="160" x2="62"  y2="160"/>
+    <!-- 외부 노드 간 연결 -->
+    <line x1="90"  y1="80"  x2="230" y2="75"/>
+    <line x1="230" y1="75"  x2="255" y2="160"/>
+    <line x1="255" y1="160" x2="230" y2="245"/>
+    <line x1="230" y1="245" x2="90"  y2="248"/>
+    <line x1="90"  y1="248" x2="62"  y2="160"/>
+    <line x1="62"  y1="160" x2="90"  y2="80"/>
+    <!-- 중간 레이어 연결 -->
+    <line x1="90"  y1="80"  x2="120" y2="115"/>
+    <line x1="230" y1="75"  x2="200" y2="115"/>
+    <line x1="255" y1="160" x2="210" y2="160"/>
+    <line x1="230" y1="245" x2="200" y2="205"/>
+    <line x1="90"  y1="248" x2="120" y2="205"/>
+    <line x1="62"  y1="160" x2="110" y2="160"/>
+  </g>
+
+  <!-- 중간 레이어 노드 -->
+  <g filter="url(#node-glow)">
+    <circle cx="120" cy="115" r="5" fill="#78f0cf" opacity="0.7"/>
+    <circle cx="200" cy="115" r="5" fill="#78f0cf" opacity="0.7"/>
+    <circle cx="210" cy="160" r="5" fill="#78f0cf" opacity="0.7"/>
+    <circle cx="200" cy="205" r="5" fill="#78f0cf" opacity="0.7"/>
+    <circle cx="120" cy="205" r="5" fill="#78f0cf" opacity="0.7"/>
+    <circle cx="110" cy="160" r="5" fill="#78f0cf" opacity="0.7"/>
+  </g>
+
+  <!-- 외부 노드 -->
+  <g filter="url(#node-glow)">
+    <circle cx="90"  cy="80"  r="7" fill="#78f0cf" opacity="0.9"/>
+    <circle cx="230" cy="75"  r="7" fill="#78f0cf" opacity="0.9"/>
+    <circle cx="255" cy="160" r="7" fill="#78f0cf" opacity="0.9"/>
+    <circle cx="230" cy="245" r="7" fill="#78f0cf" opacity="0.9"/>
+    <circle cx="90"  cy="248" r="7" fill="#78f0cf" opacity="0.9"/>
+    <circle cx="62"  cy="160" r="7" fill="#78f0cf" opacity="0.9"/>
+  </g>
+
+  <!-- 중앙 핵심 노드 (pulse 애니메이션) -->
+  <circle cx="160" cy="160" r="22" fill="#0a0b0d" stroke="#78f0cf" stroke-width="1.5" opacity="0.5">
+    <animate attributeName="r" values="22;26;22" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0.2;0.5" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="160" cy="160" r="14" fill="#78f0cf" filter="url(#center-glow)">
+    <animate attributeName="opacity" values="0.9;0.6;0.9" dur="3s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- 테두리 원 (클리핑용) -->
+  <circle cx="160" cy="160" r="159" fill="none" stroke="#78f0cf" stroke-opacity="0.12" stroke-width="1"/>
 </svg>
