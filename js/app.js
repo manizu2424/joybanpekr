@@ -567,38 +567,21 @@ async function loadPostDetail(id) {
             if (fileListContainer) fileListContainer.style.display = 'none';
 
             if (post.media && post.media.length > 0) {
+                // 이미지/비디오/기타 분류
+                const imagePaths = [];
+                const videoPaths = [];
+
                 post.media.forEach(media => {
-                    // 경로 정리: ../ 제거 및 uploads/ 확인
+                    // 경로 정리: ../ 제거
                     let cleanPath = media.file_path.replace(/^(\.\.\/)+/, '');
-                    
                     const ext = cleanPath.split('.').pop().toLowerCase();
                     const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext);
                     const isVideo = ['mp4', 'webm', 'ogg'].includes(ext);
 
                     if (isImage) {
-                        if (mediaWrapper) {
-                            const img = document.createElement('img');
-                            img.src = cleanPath;
-                            img.className = 'content-media';
-                            img.style.cursor = 'pointer';
-                            
-                            img.onerror = () => {
-                                console.error('Image load failed:', cleanPath);
-                                img.alt = '이미지를 불러올 수 없습니다.';
-                            };
-
-                            img.onclick = () => window.open(cleanPath, '_blank');
-
-                            mediaWrapper.appendChild(img);
-                        }
+                        imagePaths.push(cleanPath);
                     } else if (isVideo) {
-                        if (mediaWrapper) {
-                            const video = document.createElement('video');
-                            video.src = cleanPath;
-                            video.controls = true;
-                            video.className = 'content-media';
-                            mediaWrapper.appendChild(video);
-                        }
+                        videoPaths.push(cleanPath);
                     } else {
                         // 그 외 파일은 다운로드 목록에 추가
                         if (fileListUl && fileListContainer) {
@@ -609,15 +592,40 @@ async function loadPostDetail(id) {
                             a.innerHTML = `<i class="fas fa-file-download"></i> ${escapeHTML(media.original_name || '첨부파일')}`;
                             a.style.textDecoration = 'none';
                             a.style.color = '#333';
-                            
                             li.style.marginBottom = '0.5rem';
                             li.appendChild(a);
                             fileListUl.appendChild(li);
-                            
-                            fileListContainer.style.display = 'block'; 
+                            fileListContainer.style.display = 'block';
                         }
                     }
                 });
+
+                // 이미지 처리: 1개면 단독 표시, 2개 이상이면 슬라이드
+                if (mediaWrapper && imagePaths.length > 0) {
+                    if (imagePaths.length === 1) {
+                        const img = document.createElement('img');
+                        img.src = imagePaths[0];
+                        img.className = 'content-media';
+                        img.style.cursor = 'zoom-in';
+                        img.onerror = () => { img.alt = '이미지를 불러올 수 없습니다.'; };
+                        img.onclick = () => showLightbox(imagePaths, 0);
+                        mediaWrapper.appendChild(img);
+                    } else {
+                        // 슬라이드 생성
+                        mediaWrapper.appendChild(createMediaSlider(imagePaths));
+                    }
+                }
+
+                // 비디오 처리
+                if (mediaWrapper && videoPaths.length > 0) {
+                    videoPaths.forEach(src => {
+                        const video = document.createElement('video');
+                        video.src = src;
+                        video.controls = true;
+                        video.className = 'content-media';
+                        mediaWrapper.appendChild(video);
+                    });
+                }
             }
 
             // '목록으로' 링크 수정
@@ -629,6 +637,174 @@ async function loadPostDetail(id) {
     } catch (error) {
         console.error('Error fetching post detail:', error);
     }
+}
+
+/**
+ * 이미지 슬라이드(캐러셀) 생성
+ * @param {string[]} images - 이미지 경로 배열
+ * @returns {HTMLElement} 슬라이드 컨테이너
+ */
+function createMediaSlider(images) {
+    const slider = document.createElement('div');
+    slider.className = 'media-slider';
+
+    // 슬라이드 트랙
+    const track = document.createElement('div');
+    track.className = 'media-slider-track';
+
+    images.forEach((src, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'media-slide';
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = `이미지 ${i + 1}`;
+        img.loading = 'lazy';
+        img.onerror = () => { img.alt = '이미지를 불러올 수 없습니다.'; };
+        img.onclick = () => showLightbox(images, currentIndex);
+        slide.appendChild(img);
+        track.appendChild(slide);
+    });
+    slider.appendChild(track);
+
+    // 슬라이드 카운터
+    const count = document.createElement('div');
+    count.className = 'slider-count';
+    slider.appendChild(count);
+
+    // 이전/다음 버튼
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'slider-btn prev';
+    prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    prevBtn.setAttribute('aria-label', '이전 이미지');
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'slider-btn next';
+    nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    nextBtn.setAttribute('aria-label', '다음 이미지');
+
+    slider.appendChild(prevBtn);
+    slider.appendChild(nextBtn);
+
+    // 인디케이터 dots
+    const dotsWrapper = document.createElement('div');
+    dotsWrapper.className = 'slider-dots';
+    const dots = images.map((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', `${i + 1}번 이미지`);
+        dot.onclick = () => goTo(i);
+        dotsWrapper.appendChild(dot);
+        return dot;
+    });
+    slider.appendChild(dotsWrapper);
+
+    let currentIndex = 0;
+
+    function goTo(index) {
+        currentIndex = Math.max(0, Math.min(images.length - 1, index));
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        dots.forEach((d, i) => d.classList.toggle('active', i === currentIndex));
+        count.textContent = `${currentIndex + 1} / ${images.length}`;
+        // 이미지 클릭 이벤트 동기화 (클로저 업데이트)
+        track.querySelectorAll('.media-slide img').forEach((img, i) => {
+            img.onclick = () => showLightbox(images, currentIndex);
+        });
+    }
+
+    prevBtn.onclick = () => goTo(currentIndex - 1);
+    nextBtn.onclick = () => goTo(currentIndex + 1);
+
+    // 터치 스와이프 지원
+    let touchStartX = 0;
+    slider.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    slider.addEventListener('touchend', e => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) goTo(currentIndex + (diff > 0 ? 1 : -1));
+    }, { passive: true });
+
+    // 초기화
+    goTo(0);
+    return slider;
+}
+
+/**
+ * 라이트박스 표시
+ * @param {string[]} images - 이미지 경로 배열
+ * @param {number} startIndex - 시작 인덱스
+ */
+function showLightbox(images, startIndex = 0) {
+    let current = startIndex;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'lightbox-overlay';
+
+    const inner = document.createElement('div');
+    inner.className = 'lightbox-inner';
+
+    const img = document.createElement('img');
+    img.className = 'lightbox-img';
+    inner.appendChild(img);
+
+    // 닫기 버튼
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'lightbox-close';
+    closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    closeBtn.setAttribute('aria-label', '닫기');
+
+    // 이전/다음 버튼 (이미지 2개 이상일 때만)
+    let prevNav = null, nextNav = null, counter = null;
+    if (images.length > 1) {
+        prevNav = document.createElement('button');
+        prevNav.className = 'lightbox-nav prev';
+        prevNav.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        prevNav.setAttribute('aria-label', '이전');
+
+        nextNav = document.createElement('button');
+        nextNav.className = 'lightbox-nav next';
+        nextNav.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        nextNav.setAttribute('aria-label', '다음');
+
+        counter = document.createElement('div');
+        counter.className = 'lightbox-counter';
+
+        overlay.appendChild(prevNav);
+        overlay.appendChild(nextNav);
+        overlay.appendChild(counter);
+    }
+
+    overlay.appendChild(inner);
+    overlay.appendChild(closeBtn);
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+
+    function update(index) {
+        current = Math.max(0, Math.min(images.length - 1, index));
+        img.src = images[current];
+        img.alt = `이미지 ${current + 1}`;
+        if (counter) counter.textContent = `${current + 1} / ${images.length}`;
+        if (prevNav) prevNav.style.display = current === 0 ? 'none' : 'grid';
+        if (nextNav) nextNav.style.display = current === images.length - 1 ? 'none' : 'grid';
+    }
+
+    function close() {
+        overlay.remove();
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', onKey);
+    }
+
+    function onKey(e) {
+        if (e.key === 'Escape') close();
+        if (e.key === 'ArrowLeft' && images.length > 1) update(current - 1);
+        if (e.key === 'ArrowRight' && images.length > 1) update(current + 1);
+    }
+
+    closeBtn.onclick = close;
+    overlay.onclick = (e) => { if (e.target === overlay) close(); };
+    if (prevNav) prevNav.onclick = () => update(current - 1);
+    if (nextNav) nextNav.onclick = () => update(current + 1);
+    document.addEventListener('keydown', onKey);
+
+    update(startIndex);
 }
 
 /**

@@ -25,7 +25,30 @@ try {
     $stmt = $pdo->prepare("UPDATE posts SET category = ?, title = ?, content = ?, updated_at = NOW() WHERE id = ?");
     $stmt->execute([$category, $title, $content, $id]);
 
-    // 2. 새 파일 업로드 처리
+    // 2. 기존 파일 삭제 처리 (delete_files[] 배열)
+    if (isset($_POST['delete_files']) && is_array($_POST['delete_files'])) {
+        foreach ($_POST['delete_files'] as $mediaId) {
+            $mediaId = (int)$mediaId;
+            if ($mediaId > 0) {
+                // 파일 경로 조회
+                $pathStmt = $pdo->prepare("SELECT file_path FROM media WHERE id = ? AND post_id = ?");
+                $pathStmt->execute([$mediaId, $id]);
+                $row = $pathStmt->fetch(PDO::FETCH_ASSOC);
+                if ($row) {
+                    // 실제 파일 삭제 (uploads/ 기준)
+                    $realPath = "../../" . $row['file_path'];
+                    if (file_exists($realPath)) {
+                        unlink($realPath);
+                    }
+                    // DB에서 미디어 레코드 삭제
+                    $delStmt = $pdo->prepare("DELETE FROM media WHERE id = ? AND post_id = ?");
+                    $delStmt->execute([$mediaId, $id]);
+                }
+            }
+        }
+    }
+
+    // 3. 새 파일 업로드 처리
     if (isset($_FILES['files']) && count($_FILES['files']['name']) > 0) {
         $files = $_FILES['files'];
         // 기존 미디어의 최대 순서 가져오기

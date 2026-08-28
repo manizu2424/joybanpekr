@@ -165,13 +165,13 @@
           const response = await fetch(`api/posts/detail.php?id=${id}`);
           const result = await response.json();
 
-          if (result.status === "success") {
+            if (result.status === "success") {
             const post = result.data;
             document.getElementById("category").value = post.category;
             document.getElementById("title").value = post.title;
             document.getElementById("content").value = post.content;
 
-            // 기존 파일 목록 표시 (삭제 기능은 추후 구현 필요 시 추가)
+            // 기존 파일 목록 표시 (삭제 버튼 포함)
             if (post.media && post.media.length > 0) {
               const existingDiv = document.getElementById("existingFiles");
               existingDiv.innerHTML = "<strong>기존 첨부파일:</strong>";
@@ -179,7 +179,43 @@
               list.className = "existing-file-list";
               post.media.forEach((file) => {
                 const item = document.createElement("li");
-                item.textContent = file.original_name || "첨부파일";
+                item.className = "existing-file-item";
+                item.dataset.fileId = file.id;
+
+                const icon = document.createElement("i");
+                const ext = (file.original_name || '').split('.').pop().toLowerCase();
+                const isImage = ['jpg','jpeg','png','gif','webp','svg'].includes(ext);
+                icon.className = isImage ? "fas fa-image" : "fas fa-file-lines";
+
+                const nameSpan = document.createElement("span");
+                nameSpan.textContent = file.original_name || "첨부파일";
+
+                const removeBtn = document.createElement("button");
+                removeBtn.type = "button";
+                removeBtn.className = "existing-file-remove-btn";
+                removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                removeBtn.title = "이 파일 삭제";
+                removeBtn.onclick = () => {
+                  item.classList.toggle("deleted");
+                  const isDeleted = item.classList.contains("deleted");
+                  // 삭제할 파일 ID를 hidden input으로 추가/제거
+                  const existingHidden = document.querySelector(`input[name="delete_files[]"][value="${file.id}"]`);
+                  if (isDeleted && !existingHidden) {
+                    const hidden = document.createElement("input");
+                    hidden.type = "hidden";
+                    hidden.name = "delete_files[]";
+                    hidden.value = file.id;
+                    document.getElementById("writeForm").appendChild(hidden);
+                  } else if (!isDeleted && existingHidden) {
+                    existingHidden.remove();
+                  }
+                  removeBtn.title = isDeleted ? "삭제 취소" : "이 파일 삭제";
+                  removeBtn.style.color = isDeleted ? "var(--mint)" : "";
+                };
+
+                item.appendChild(icon);
+                item.appendChild(nameSpan);
+                item.appendChild(removeBtn);
                 list.appendChild(item);
               });
               existingDiv.appendChild(list);
@@ -240,13 +276,17 @@
           }
         });
 
-      // 파일 선택 시 목록 표시
-      document.getElementById("files").addEventListener("change", (e) => {
+      // 파일 선택 시 목록 표시 (DataTransfer API로 개별 삭제 지원)
+      let selectedFiles = []; // 선택된 파일을 배열로 관리
+
+      function renderFileList() {
         const list = document.getElementById("fileList");
         list.innerHTML = "";
-        for (const file of e.target.files) {
+
+        selectedFiles.forEach((file, index) => {
           const item = document.createElement("div");
           item.className = "file-preview-item";
+
           if (file.type.startsWith("image/")) {
             const image = document.createElement("img");
             image.src = URL.createObjectURL(file);
@@ -255,14 +295,49 @@
             item.appendChild(image);
           } else {
             const icon = document.createElement("i");
-            icon.className = file.type.startsWith("video/") ? "fas fa-film" : "fas fa-file-lines";
+            icon.className = (file.type.startsWith("video/") ? "fas fa-film" : "fas fa-file-lines") + " file-icon";
             item.appendChild(icon);
           }
+
           const name = document.createElement("span");
           name.textContent = file.name;
           item.appendChild(name);
+
+          // 삭제 버튼
+          const removeBtn = document.createElement("button");
+          removeBtn.type = "button";
+          removeBtn.className = "file-remove-btn";
+          removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+          removeBtn.title = "파일 삭제";
+          removeBtn.onclick = () => {
+            selectedFiles.splice(index, 1);
+            syncFilesToInput();
+            renderFileList();
+          };
+          item.appendChild(removeBtn);
+
           list.appendChild(item);
-        }
+        });
+      }
+
+      // 선택된 파일 배열을 <input type="file">에 동기화
+      function syncFilesToInput() {
+        const dt = new DataTransfer();
+        selectedFiles.forEach(f => dt.items.add(f));
+        document.getElementById("files").files = dt.files;
+      }
+
+      document.getElementById("files").addEventListener("change", (e) => {
+        // 기존 목록에 새 파일을 추가 (중복 제외)
+        const newFiles = Array.from(e.target.files);
+        newFiles.forEach(newFile => {
+          const isDuplicate = selectedFiles.some(f => f.name === newFile.name && f.size === newFile.size);
+          if (!isDuplicate) selectedFiles.push(newFile);
+        });
+        syncFilesToInput();
+        renderFileList();
+        // input 초기화 (동일 파일 재선택 가능하도록)
+        e.target.value = "";
       });
     </script>
     <script src="js/app.js"></script>
