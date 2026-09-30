@@ -1,0 +1,9 @@
+Options -Indexes
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(?:\.git|\.agents|\.codex|\.aws|docs|sql|tools|tests|api/config)(?:/|$) - [F,L]
+    RewriteRule ^(?:AGENTS?\.md|README\.md|문제점\.md|git-test\.txt|\.env(?:\..*)?)$ - [F,L]
+</IfModule>
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

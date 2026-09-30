@@ -23,7 +23,7 @@ class UIManager {
         else if (type === 'error') icon = '<i class="fas fa-exclamation-circle"></i>';
         else icon = '<i class="fas fa-info-circle"></i>';
 
-        toast.innerHTML = `${icon} <span>${message}</span>`;
+        toast.innerHTML = `${icon} <span>${escapeHTML(message)}</span>`;
         
         container.appendChild(toast);
 
@@ -44,7 +44,7 @@ class UIManager {
             overlay.innerHTML = `
                 <div class="custom-modal">
                     <h3><i class="fas fa-question-circle"></i> 확인</h3>
-                    <p>${message}</p>
+                    <p>${escapeHTML(message)}</p>
                     <div class="modal-buttons">
                         <button class="btn-modal confirm">확인</button>
                         <button class="btn-modal cancel">취소</button>
@@ -80,7 +80,7 @@ class UIManager {
             overlay.innerHTML = `
                 <div class="custom-modal">
                     <h3><i class="fas fa-pen"></i> 입력</h3>
-                    <p>${message}</p>
+                    <p>${escapeHTML(message)}</p>
                     <input type="${type}" class="modal-input" autofocus>
                     <div class="modal-buttons">
                         <button class="btn-modal confirm">확인</button>
@@ -138,6 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loadBoardPosts(category);
     } else if (isViewPage && postId) {
         loadPostDetail(postId);
+    } else if (isViewPage) {
+        showDetailError('게시글 주소를 확인해주세요.');
     } else if (isIndexPage) {
         loadPostStats();
     }
@@ -178,12 +180,6 @@ function escapeHTML(value) {
         '"': '&quot;',
         "'": '&#39;'
     }[char]));
-}
-
-function toPlainText(value) {
-    const div = document.createElement('div');
-    div.innerHTML = value ?? '';
-    return div.textContent || div.innerText || '';
 }
 
 function setActiveNav(category) {
@@ -346,7 +342,7 @@ function updateAdminUI(isLoggedIn) {
  */
 async function deletePost(id, category) {
     try {
-        const response = await fetch('api/posts/delete.php', {
+        const response = await adminFetch('api/posts/delete.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: id })
@@ -373,7 +369,7 @@ async function deletePost(id, category) {
  */
 async function logoutAdmin() {
     try {
-        const response = await fetch('api/auth/logout.php');
+        const response = await adminFetch('api/auth/logout.php', { method: 'POST' });
         const result = await response.json();
         if (result.status === 'success') {
             UIManager.showToast('로그아웃 되었습니다.', 'success');
@@ -394,6 +390,7 @@ async function loadBoardPosts(category, page = 1) {
     // 카테고리 타이틀 업데이트
     const titleEl = document.querySelector('.category-title');
     const descEl = document.querySelector('.category-desc');
+    if (!Object.hasOwn(CATEGORY_META, category)) category = 'aiworld';
     const meta = CATEGORY_META[category];
     document.body.dataset.currentCategory = category;
     if (titleEl) titleEl.innerText = getCategoryTitle(category);
@@ -410,7 +407,8 @@ async function loadBoardPosts(category, page = 1) {
 
         postListContainer.innerHTML = ''; // 초기화
 
-        if (result.status === 'success' && result.data.length > 0) {
+        if (!response.ok || result.status !== 'success') throw new Error('게시글 조회 실패');
+        if (result.data.length > 0) {
             result.data.forEach(post => {
                 const postItem = document.createElement('article');
                 postItem.className = 'post-item';
@@ -425,7 +423,7 @@ async function loadBoardPosts(category, page = 1) {
                 if (post.thumbnail) {
                     thumbHtml = `<img src="${escapeHTML(post.thumbnail)}" alt="${escapeHTML(post.title)}">`;
                 }
-                const summaryText = toPlainText(post.content).trim();
+                const summaryText = String(post.content).trim();
                 
                 postItem.innerHTML = `
                     <div class="post-thumb">
@@ -532,7 +530,7 @@ function renderPagination(totalCount, currentPage, limit, category) {
  */
 async function loadPostDetail(id) {
     try {
-        const response = await fetch(`api/posts/detail.php?id=${id}`);
+        const response = await fetch(`api/posts/detail.php?id=${encodeURIComponent(id)}`);
         const result = await response.json();
 
         if (result.status === 'success') {
@@ -541,7 +539,7 @@ async function loadPostDetail(id) {
             setActiveNav(post.category);
             document.querySelector('.view-title').innerText = post.title;
             document.title = `${post.title} - Joyban`;
-            const plainContent = toPlainText(post.content).trim();
+            const plainContent = String(post.content).trim();
             const description = plainContent.substring(0, 120) || 'Joyban 개인 홈페이지의 게시글입니다.';
             setMetaContent('meta[name="description"]', description);
             setMetaContent('meta[property="og:title"]', `${post.title} - Joyban`);
@@ -633,8 +631,11 @@ async function loadPostDetail(id) {
             if (listBtn && post.category) {
                 listBtn.href = `board.html?category=${post.category}`;
             }
+        } else {
+            showDetailError('게시글이 존재하지 않거나 삭제되었습니다.');
         }
     } catch (error) {
+        showDetailError('게시글을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.');
         console.error('Error fetching post detail:', error);
     }
 }
@@ -886,4 +887,23 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initMobileMenu);
 } else {
     initMobileMenu();
+}
+
+// 모든 관리자 변경 요청은 세션의 CSRF 토큰을 함께 보냅니다.
+async function adminFetch(url, options = {}) {
+    const response = await fetch('api/auth/status.php', { cache: 'no-store' });
+    const auth = await response.json();
+    if (!response.ok || !auth.isLoggedIn || !auth.csrfToken) throw new Error('로그인이 필요합니다.');
+    return fetch(url, { ...options, headers: { ...options.headers, 'X-CSRF-Token': auth.csrfToken } });
+}
+
+function showDetailError(message) {
+    const title = document.querySelector('.view-title');
+    if (title) title.textContent = message;
+    const content = document.querySelector('.view-content');
+    if (content) content.textContent = '목록으로 돌아가 다른 기록을 확인해주세요.';
+    const date = document.querySelector('.view-meta .date');
+    if (date) date.textContent = '';
+    const attachments = document.querySelector('.attachment-list');
+    if (attachments) attachments.style.display = 'none';
 }

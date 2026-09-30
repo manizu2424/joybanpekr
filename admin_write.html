@@ -96,8 +96,9 @@
               id="files"
               class="form-control"
               multiple
-              accept="image/*,video/*,application/pdf"
+              accept=".jpg,.jpeg,.png,.gif,.mp4,.pdf"
             />
+            <p class="form-help">JPG, PNG, GIF, MP4, PDF · 파일당 20MB 이하 · 한 번에 최대 10개 (서버 제한이 더 작을 수 있습니다)</p>
             <div class="file-list" id="fileList"></div>
             <div id="existingFiles" style="margin-top: 10px; color: #666"></div>
           </div>
@@ -162,7 +163,7 @@
 
       async function loadPostData(id) {
         try {
-          const response = await fetch(`api/posts/detail.php?id=${id}`);
+          const response = await fetch(`api/posts/detail.php?id=${encodeURIComponent(id)}&mode=edit`);
           const result = await response.json();
 
             if (result.status === "success") {
@@ -242,7 +243,7 @@
           submitBtn.textContent = postId ? "수정 중..." : "저장 중...";
 
           try {
-            const response = await fetch(url, {
+            const response = await adminFetch(url, {
               method: "POST",
               body: formData,
             });

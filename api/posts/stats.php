@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
-require_once '../config/db.php';
+require_once __DIR__ . '/../config/connect.php';
 
 try {
     $categories = ['aiworld', 'works', 'vision', 'skillup'];
@@ -49,10 +49,11 @@ try {
     ], JSON_UNESCAPED_UNICODE);
 
 } catch (PDOException $e) {
+    error_log('Joyban posts: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode([
         "status" => "error",
-        "message" => "Database error: " . $e->getMessage()
+        "message" => "자료를 불러오지 못했습니다."
     ]);
 }
 ?>
