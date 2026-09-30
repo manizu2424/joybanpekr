@@ -9,7 +9,7 @@ web_files = [ROOT / name for name in (
     'index.html', 'board.html', 'view.html', 'admin_write.html',
     '.htaccess', 'favicon.svg', 'robots.txt', 'sitemap.xml',
     'uploads/.htaccess',
-    'images/aibot-flat-white.png', 'images/og-image.png', 'images/profile-placeholder.svg',
+    'images/aibot-flat-black.png', 'images/og-image.png', 'images/profile-placeholder.svg',
 )]
 for directory in ('css', 'js', 'api'):
     web_files.extend(path for path in (ROOT / directory).rglob('*')

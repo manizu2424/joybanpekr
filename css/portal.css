@@ -43,7 +43,7 @@
 .portal-intro p:not(.eyebrow) { color:#fff; }
 .portal #add-link,.portal .portal-search button { background:var(--tool-bg); border:1px solid var(--tool-line); color:#fff; }
 .portal #add-link:hover,.portal .portal-search button:hover { background:var(--tool-hover); filter:none; }
-.brand-bot { width:44px; height:44px; object-fit:contain; flex-shrink:0; }
+.brand-bot { width:44px; height:44px; object-fit:contain; flex-shrink:0; background:#f5f6f8; border-radius:12px; padding:4px; }
 .eyebrow { color:var(--text-faint); letter-spacing:.14em; font-size:.65rem; font-weight:700; }
 .portal-intro .eyebrow { color:#dbeeff; }
 .portal-intro h1 { font-size:clamp(2rem,4vw,3.5rem); letter-spacing:-.055em; margin:7px 0; line-height:1.4; }
