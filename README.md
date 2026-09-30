@@ -19,6 +19,10 @@ RSS 소식 수집·예약 갱신·AI 요약은 2차 범위이며 아직 구현�
 
 HTML/CSS/Vanilla JavaScript, PHP 8.2, MariaDB 10.x, Apache. Cafe24 `10G 광아우토반 FullSSD Plus 일반형`의 FTP 배포 구조를 유지합니다. Node 서버나 파이썬 상시 실행 프로세스가 필요하지 않습니다.
 
+## 배포 패키지
+
+`python3 tools/build_release.py`로 FTP 웹 파일과 별도 설치 자료를 `release/`에 만들 수 있습니다. 실제 업로드 순서는 [Cafe24 배포 안내](docs/cafe24-deployment.md)를 참고하세요.
+
 ## 기존 운영 사이트에 적용
 
 1. 운영 DB와 웹 파일, 특히 `uploads/`를 백업합니다.

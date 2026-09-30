@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="AI, 웹개발, 파이썬, 자동화. 필요한 도구와 다시 읽을 자료를 모으는 Joyban의 개인 포털." />
-  <meta name="theme-color" content="#0a0b0d" />
+  <meta name="theme-color" content="#101014" />
   <link rel="canonical" href="https://www.joyban.pe.kr/" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Joyban — 나의 관심사를 연결하는 곳" />
@@ -23,17 +23,19 @@
 <body class="portal">
   <a class="skip-link" href="#main">본문으로 이동</a>
   <header class="portal-header"><div class="container">
-    <a class="portal-brand" href="index.html"><span class="brand-symbol">J</span> joyban<span class="brand-caption"> / PERSONAL PORTAL</span></a>
+    <a class="portal-brand" href="index.html"><img class="brand-bot" src="images/aibot-flat-white.png" alt="" width="44" height="44" /> joyban<span class="brand-caption"> / PERSONAL PORTAL</span></a>
     <div class="header-actions"><a href="#records">개인 기록</a><button id="auth-button" class="btn-secondary" type="button" disabled>로그인 확인 중</button></div>
   </div></header>
   <main id="main" class="container portal-main">
+    <section class="portal-discovery" aria-label="관심 분야와 검색">
     <section class="portal-intro" aria-labelledby="portal-title"><div><p class="eyebrow">MY CORNER OF THE WEB</p><h1 id="portal-title">관심사를 연결하는 곳<span>.</span></h1><p>자주 쓰는 도구부터 다시 읽을 자료까지, 한곳에서 이어갑니다.</p></div><button id="add-link" class="btn-primary" type="button" hidden>＋ 링크 저장</button></section>
     <form id="search-form" class="portal-search" role="search"><label for="search-input">보관함 검색</label><input id="search-input" type="search" placeholder="제목, 태그, 메모로 찾아보세요" maxlength="160" autocomplete="off" /><button type="submit" class="btn-primary">검색</button></form>
     <nav id="category-filters" class="category-filters" aria-label="관심 분야">
       <button type="button" data-category="" aria-pressed="true">전체</button><button type="button" data-category="ai" aria-pressed="false">AI</button><button type="button" data-category="web" aria-pressed="false">웹개발</button><button type="button" data-category="python" aria-pressed="false">파이썬</button><button type="button" data-category="automation" aria-pressed="false">자동화</button><button type="button" data-category="other" aria-pressed="false">기타</button>
     </nav>
+    </section>
     <div class="portal-layout">
-      <aside class="portal-sidebar" aria-label="보관함 분류"><p class="eyebrow">LIBRARY</p><nav id="view-filters"><button type="button" data-view="all" aria-pressed="true">모든 자료 <span>↗</span></button><button type="button" data-view="favorites" aria-pressed="false">즐겨찾기 <span>☆</span></button><button type="button" data-view="site" aria-pressed="false">사이트 · 도구 <span>⌘</span></button><button type="button" data-view="article" aria-pressed="false">읽을거리 <span>≡</span></button><button type="button" data-view="unread" aria-pressed="false" data-admin hidden>나중에 읽기 <span>◷</span></button><button type="button" data-view="workspace" aria-pressed="false" data-admin hidden>내 작업 공간 <span>▣</span></button></nav><div class="sidebar-note"><span class="status-dot"></span><p id="visibility-note">공개 자료를 둘러보세요.<br />로그인하면 개인 보관함을 관리할 수 있습니다.</p></div></aside>
+      <aside class="portal-sidebar" aria-label="보관함 분류"><p class="eyebrow">보관함 메뉴</p><nav id="view-filters"><button type="button" data-view="all" aria-pressed="true">모든 자료 <span>↗</span></button><button type="button" data-view="favorites" aria-pressed="false">즐겨찾기 <span>☆</span></button><button type="button" data-view="site" aria-pressed="false">사이트 · 도구 <span>⌘</span></button><button type="button" data-view="article" aria-pressed="false">읽을거리 <span>≡</span></button><button type="button" data-view="unread" aria-pressed="false" data-admin hidden>나중에 읽기 <span>◷</span></button><button type="button" data-view="workspace" aria-pressed="false" data-admin hidden>내 작업 공간 <span>▣</span></button></nav><div class="sidebar-note"><span class="status-dot"></span><p id="visibility-note">공개 자료를 둘러보세요.<br />로그인하면 개인 보관함을 관리할 수 있습니다.</p></div></aside>
       <section class="library" aria-labelledby="library-title"><div class="library-heading"><div><p class="eyebrow" id="library-kicker">YOUR COLLECTION</p><h2 id="library-title">모든 자료</h2></div><p id="result-count" aria-live="polite"></p></div><div id="active-tag" hidden><span></span><button type="button" aria-label="태그 필터 해제">×</button></div><div id="library-message" role="status">자료를 불러오는 중입니다.</div><div id="link-grid" class="link-grid"></div><button id="load-more" class="btn-secondary load-more" type="button" hidden>더 보기</button></section>
     </div>
     <section id="records" class="record-section" aria-labelledby="records-title"><div class="library-heading"><div><p class="eyebrow">NOTES & EXPERIMENTS</p><h2 id="records-title">직접 남긴 기록</h2></div><a href="admin_write.html" class="text-link" data-admin hidden>새 기록 작성 ↗</a></div><div class="record-grid"><a href="board.html?category=aiworld"><span>01 / AI</span><h3>AI 이야기</h3><p>도구를 써보고, 실험한 기록</p><span class="post-count" data-category="aiworld">불러오는 중</span><span class="post-latest" data-latest-category="aiworld"></span></a><a href="board.html?category=works"><span>02 / PROJECT</span><h3>만든 것들</h3><p>웹과 코드로 만든 프로젝트</p><span class="post-count" data-category="works">불러오는 중</span><span class="post-latest" data-latest-category="works"></span></a><a href="board.html?category=vision"><span>03 / THOUGHTS</span><h3>생각정리</h3><p>회고와 다음 작업의 방향</p><span class="post-count" data-category="vision">불러오는 중</span><span class="post-latest" data-latest-category="vision"></span></a><a href="board.html?category=skillup"><span>04 / LEARNING</span><h3>배움노트</h3><p>파이썬, 웹개발, 문제 해결</p><span class="post-count" data-category="skillup">불러오는 중</span><span class="post-latest" data-latest-category="skillup"></span></a></div></section>
