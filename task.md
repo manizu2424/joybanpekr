@@ -277,3 +277,16 @@
 ### 사용자 제공 아이콘 적용
 
 사용자가 첨부한 `monochrome_photos_90dp_000000_FILL0_wght400_GRAD0_opsz48.png`를 변경 없이 `images/portal-brand-icon.png`로 복사해 상단 브랜드 아이콘으로 적용했습니다. 이전 생성 봇을 대체하며 밝은 둥근 바탕을 유지했습니다. 미리보기와 배포 패키지에 반영했습니다.
+
+## 2026-09-30 작업 마무리
+
+- 사용자 승인 디자인: 단일 차콜·블루, 상단 블루에서 하단 차콜로 이어지는 세로 그라데이션, 큰 PC 글자
+- 최종 아이콘: 사용자 제공 이미지 `images/portal-brand-icon.png`
+- 디자인·배포 준비 커밋 `880cd60`, 아이콘 변경 `887b017`, 최종 사용자 아이콘 적용 `a908ac7`을 GitHub `feat/personal-portal`에 푸시 완료
+- FTP 웹 패키지와 설치 자료: `release/joyban-web.zip`, `release/joyban-setup.zip`
+- 로컬 미리보기 컨테이너는 중지하고 데이터와 코드 복사본은 보존
+- 미리보기 재개: `docker start joyban-portal-preview-db joyban-portal-preview-web`, 주소 `http://127.0.0.1:55608`
+- main 병합, Cafe24 FTP 업로드, 운영 DB 변경은 아직 미실행
+- 다음 작업: 운영 파일·DB 백업과 서버 연결 설정 확인 후 `docs/cafe24-deployment.md` 순서로 배포
+
+이 마무리 기록은 이후의 재개 기준이며, 이전 단락의 진행 상태는 각 작업 시점의 이력입니다.
