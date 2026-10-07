@@ -9,6 +9,7 @@
   --text-faint: #8e98a8;
   --accent: #8eb7ff;
   --accent-ink: #10141c;
+  --title: #f0c36a;
   --danger: #ff8d96;
   color-scheme: dark;
   background: var(--bg);
@@ -27,9 +28,9 @@
 .portal .container { width: min(calc(100% - 48px), 920px); }
 .portal-header { border-bottom: 1px solid var(--line); }
 .portal-header .container { min-height: 64px; display: flex; align-items: center; gap: 14px 22px; }
-.portal-brand { display: flex; align-items: center; gap: 10px; font-size: 1.05rem; font-weight: 600; }
-.brand-bot { width: 28px; height: 28px; object-fit: contain; background: #e8ebf0; border-radius: 7px; padding: 3px; }
-.brand-line { margin-right: auto; color: var(--text-faint); font-size: .92rem; }
+.portal-brand { display: flex; align-items: center; gap: 10px; font-size: 1.32rem; font-weight: 600; }
+.brand-bot { width: 32px; height: 32px; object-fit: contain; background: #e8ebf0; border-radius: 8px; padding: 3px; }
+.brand-line { margin-right: auto; color: var(--title); font-size: .95rem; font-weight: 600; }
 .header-actions { display: flex; align-items: center; gap: 18px; font-size: .92rem; }
 .header-actions a { color: var(--text-soft); }
 .header-actions a:hover { color: var(--accent); }
@@ -51,7 +52,7 @@
 
 .library { margin-top: 26px; }
 .library-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
-.library-heading h2 { font-size: 1.28rem; font-weight: 600; letter-spacing: -0.03em; }
+.library-heading h2, .portal .write-header h2 { color: var(--title); font-size: 1.28rem; font-weight: 600; letter-spacing: -0.03em; }
 #result-count { color: var(--text-faint); font-size: .88rem; }
 .shelf-note { margin: 8px 0 4px; color: var(--text-faint); font-size: .88rem; line-height: 1.6; }
 #active-tag { display: inline-flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--accent); font-size: .9rem; }
@@ -193,7 +194,7 @@
 .portal .write-page { padding-block: 0 48px; }
 .portal .write-container { width: min(100%, 720px); margin: 28px 0 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 .portal .write-header { display: flex; flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; margin-bottom: 22px; }
-.portal .write-header h2 { font-size: 1.28rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1.35; }
+.portal .write-header h2 { line-height: 1.35; }
 .portal .write-header p, .portal .write-notice p { margin-top: 6px; color: var(--text-faint); font-size: .9rem; }
 .portal .write-notice { display: flex; margin-bottom: 18px; padding: 0 0 16px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; }
 .portal .write-notice strong { color: var(--text); font-weight: 500; }
