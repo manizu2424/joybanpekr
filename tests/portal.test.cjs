@@ -37,6 +37,17 @@ test('외부 링크의 안전 설정과 중복 태그 정규화',()=>{
     assert.equal(link.rel,'noopener noreferrer'); assert.equal(link.target,'_blank');
     assert.deepEqual(Array.from(ctx.splitTags('API, Python, API, ,')),['API','Python']);
 });
+test('기록 요약은 마크다운 기호와 HTML 태그를 뺀다',()=>{
+    const ctx=vm.createContext({console:{log(){},error(){}},URL,URLSearchParams,window:{location:{pathname:'/board.html'}},document:{readyState:'loading',addEventListener(){},body:{dataset:{}},querySelector(){return null},querySelectorAll:()=>[]}});
+    vm.runInContext(fs.readFileSync('js/app.js','utf8'),ctx);
+    const text=ctx.plainExcerpt('# 제목\n\n**굵게**와 <script>alert(1)</script> [링크](https://example.com)',80);
+    assert.equal(text.includes('#'),false);
+    assert.equal(text.includes('<script>'),false);
+    assert.equal(text.includes('https://example.com'),false);
+    assert.ok(text.includes('제목'));
+    assert.ok(text.includes('굵게'));
+    assert.ok(text.includes('링크'));
+});
 test('게시판 URL의 알 수 없는 카테고리는 허용된 기본값으로 대체된다',async()=>{
     const list={innerHTML:''};
     const ctx=vm.createContext({console:{log(){},error(){}},URL,URLSearchParams,window:{location:{pathname:'/board.html'}},

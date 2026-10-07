@@ -182,6 +182,67 @@ function escapeHTML(value) {
     }[char]));
 }
 
+function plainExcerpt(value, limit = 150) {
+    const text = String(value ?? '')
+        .replace(/```[\s\S]*?```/g, ' ')
+        .replace(/`([^`]*)`/g, '$1')
+        .replace(/!\[[^\]]*]\([^)]*\)/g, ' ')
+        .replace(/\[([^\]]*)]\([^)]*\)/g, '$1')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/^#{1,6}\s+/gm, '')
+        .replace(/^\s*>\s?/gm, '')
+        .replace(/^\s*([-*+]|\d+\.)\s+/gm, '')
+        .replace(/[*_~]{1,3}/g, '')
+        .replace(/^\s*[:|\-\s]+$/gm, ' ')
+        .replace(/-{3,}/g, ' ')
+        .replace(/\|/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    if (text.length <= limit) return text;
+    return text.slice(0, limit).trimEnd() + '...';
+}
+
+const RICH_TEXT_OPTIONS = {
+    ALLOWED_TAGS: ['p', 'br', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'a', 'strong', 'em', 'del', 's', 'img', 'table', 'thead', 'tbody', 'tr', 'th', 'td'],
+    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'colspan', 'rowspan', 'start', 'target', 'rel'],
+    ALLOW_DATA_ATTR: false
+};
+
+function prepareRichText() {
+    if (prepareRichText.ready || typeof DOMPurify === 'undefined') return;
+    DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+        if (node.tagName === 'A') {
+            let url;
+            try { url = new URL(node.getAttribute('href') || '', window.location.href); } catch { url = null; }
+            const protocol = url?.protocol || '';
+            if (!['http:', 'https:', 'mailto:'].includes(protocol)) node.removeAttribute('href');
+            node.setAttribute('rel', 'noopener noreferrer');
+            if (url && (protocol === 'http:' || protocol === 'https:') && url.host !== window.location.host) node.setAttribute('target', '_blank');
+            else node.removeAttribute('target');
+        }
+        if (node.tagName === 'IMG') {
+            let protocol = '';
+            try { protocol = new URL(node.getAttribute('src') || '', window.location.href).protocol; } catch { protocol = ''; }
+            if (!['http:', 'https:'].includes(protocol)) node.removeAttribute('src');
+        }
+    });
+    prepareRichText.ready = true;
+}
+
+function renderRichText(source) {
+    const raw = String(source ?? '');
+    if (typeof marked === 'undefined' || typeof marked.parse !== 'function' || typeof DOMPurify === 'undefined') {
+        return escapeHTML(raw).replace(/\n/g, '<br>');
+    }
+    prepareRichText();
+    try {
+        const html = marked.parse(raw, { async: false, gfm: true, breaks: true });
+        return DOMPurify.sanitize(html, RICH_TEXT_OPTIONS);
+    } catch {
+        return escapeHTML(raw).replace(/\n/g, '<br>');
+    }
+}
+
 function setActiveNav(category) {
     if (!category) return;
 
@@ -414,12 +475,12 @@ async function loadBoardPosts(category, page = 1) {
                 const postItem = document.createElement('article');
                 postItem.className = 'post-item';
                 postItem.onclick = () => location.href = `view.html?id=${post.id}`;
-                const summaryText = String(post.content ?? '').trim();
+                const summaryText = plainExcerpt(post.content);
                 const date = String(post.created_at ?? '').split(' ')[0];
                 postItem.innerHTML = `
                     <div class="post-info">
                         <h3 class="post-title">${escapeHTML(post.title)}</h3>
-                        <p class="post-summary">${escapeHTML(summaryText.substring(0, 150))}${summaryText.length > 150 ? '...' : ''}</p>
+                        <p class="post-summary">${escapeHTML(summaryText)}</p>
                     </div>
                     <div class="post-meta">
                         <span class="date">${escapeHTML(date)}</span>
@@ -533,8 +594,7 @@ async function loadPostDetail(id) {
             setActiveNav(post.category);
             document.querySelector('.view-title').innerText = post.title;
             document.title = `${post.title} - Joyban`;
-            const plainContent = String(post.content).trim();
-            const description = plainContent.substring(0, 120) || 'Joyban 개인 홈페이지의 게시글입니다.';
+            const description = plainExcerpt(post.content, 120) || 'Joyban 개인 홈페이지의 게시글입니다.';
             setMetaContent('meta[name="description"]', description);
             setMetaContent('meta[property="og:title"]', `${post.title} - Joyban`);
             setMetaContent('meta[property="og:description"]', description);
@@ -543,11 +603,8 @@ async function loadPostDetail(id) {
             setMetaContent('meta[name="twitter:description"]', description);
             document.querySelector('.category-badge').innerText = getCategoryTitle(post.category);
             document.querySelector('.view-meta .date').innerText = String(post.created_at ?? '').slice(0, 10);
-            //document.querySelector('.view-content').innerHTML = post.content.replace(/\n/g, '<br>');
-            const contentP = document.querySelector('.view-content p');
-            if (contentP) {
-                contentP.innerHTML = escapeHTML(post.content).replace(/\n/g, '<br>');
-            }
+            const contentBox = document.querySelector('.view-content');
+            if (contentBox) contentBox.innerHTML = renderRichText(post.content);
 
             // 미디어 및 첨부파일 처리
             const mediaWrapper = document.querySelector('.content-media-wrapper');

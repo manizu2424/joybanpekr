@@ -162,7 +162,24 @@
 .portal .view-title { font-size: clamp(1.7rem, 4vw, 2.15rem); font-weight: 600; line-height: 1.35; letter-spacing: -0.03em; }
 .portal .view-meta { margin-top: 10px; color: var(--text-faint); font-size: .86rem; }
 .portal .view-content { color: var(--text-soft); font-size: 1.02rem; line-height: 1.85; }
-.portal .view-content p { margin-bottom: 1.1em; }
+.portal .view-content > :first-child { margin-top: 0; }
+.portal .view-content p { margin: 0 0 1.1em; }
+.portal .view-content h1, .portal .view-content h2, .portal .view-content h3, .portal .view-content h4 { margin: 1.5em 0 .45em; color: var(--text); font-weight: 600; letter-spacing: -0.03em; line-height: 1.35; }
+.portal .view-content h1 { font-size: 1.45rem; }
+.portal .view-content h2 { font-size: 1.28rem; }
+.portal .view-content h3, .portal .view-content h4 { font-size: 1.08rem; }
+.portal .view-content a { color: var(--accent); }
+.portal .view-content a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.portal .view-content ul, .portal .view-content ol { margin: 0 0 1.1em; padding-left: 1.25em; }
+.portal .view-content li + li { margin-top: .25em; }
+.portal .view-content blockquote { margin: 0 0 1.1em; padding-left: 14px; border-left: 2px solid var(--line); color: var(--text-faint); }
+.portal .view-content hr { margin: 1.4em 0; border: 0; border-top: 1px solid var(--line); }
+.portal .view-content pre { margin: 0 0 1.1em; padding: 14px 16px; overflow: auto; border-radius: 4px; background: var(--surface); color: var(--text); }
+.portal .view-content code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9em; }
+.portal .view-content :not(pre) > code { padding: .1em .35em; border-radius: 3px; background: var(--surface); }
+.portal .view-content table { width: 100%; margin: 0 0 1.1em; border-collapse: collapse; }
+.portal .view-content th, .portal .view-content td { padding: 8px 10px; border-top: 1px solid var(--line); text-align: left; vertical-align: top; }
+.portal .view-content img { height: auto; margin: .4em 0 1.1em; }
 .portal .content-media { border-radius: 4px; }
 .portal .attachment-list { margin-top: 28px !important; padding: 0 !important; border: 0 !important; border-top: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; }
 .portal .attachment-list strong { display: block; margin-top: 16px; color: var(--text); font-size: .9rem; font-weight: 600; }
