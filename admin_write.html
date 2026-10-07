@@ -4,62 +4,53 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
-    <meta name="theme-color" content="#0a0b0d" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <title>관리자 글쓰기 - Joyban</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <meta name="theme-color" content="#121418" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <title>기록 작성 - Joyban</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/portal.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   </head>
-  <body>
-    <header class="main-header">
+  <body class="portal record-page">
+    <a class="skip-link" href="#writeForm">본문으로 이동</a>
+    <header class="portal-header">
       <div class="container">
-        <h1 class="logo"><a href="index.html">joyban Admin</a></h1>
-        <button class="mobile-menu-toggle" aria-label="메뉴 열기">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-        <nav class="main-nav">
-          <ul class="menu-links">
-            <li><a href="board.html?category=aiworld">AI 이야기</a></li>
-            <li><a href="board.html?category=works">만든 것들</a></li>
-            <li><a href="board.html?category=vision">생각정리</a></li>
-            <li><a href="board.html?category=skillup">배움노트</a></li>
-          </ul>
-          <a href="#" class="admin-login-btn"><i class="fas fa-lock"></i></a>
-        </nav>
+        <a class="portal-brand" href="index.html"><img class="brand-bot" src="images/portal-brand-icon.png" alt="" width="28" height="28" /> joyban</a>
+        <p class="brand-line">직접 남긴 기록</p>
+        <div class="header-actions">
+          <a href="index.html">보관함</a>
+          <a href="#" class="admin-login-btn"><i class="fas fa-lock"></i><span class="auth-label">로그인</span></a>
+        </div>
       </div>
     </header>
 
     <main class="container write-page">
+      <div class="shelf-nav">
+        <ul class="menu-links">
+          <li><a href="board.html?category=aiworld">AI 이야기</a></li>
+          <li><a href="board.html?category=works">만든 것들</a></li>
+          <li><a href="board.html?category=vision">생각정리</a></li>
+          <li><a href="board.html?category=skillup">배움노트</a></li>
+        </ul>
+      </div>
       <div class="write-container">
         <div id="authNotice" class="write-notice" style="display: none">
-          <i class="fas fa-lock"></i>
-          <div>
-            <strong>관리자 로그인이 필요합니다.</strong>
-            <p>우측 상단 자물쇠 아이콘을 눌러 로그인한 뒤 글을 작성할 수 있습니다.</p>
-          </div>
+          <p>로그인하면 글을 쓸 수 있습니다. 오른쪽 위의 로그인을 누르세요.</p>
         </div>
         <div class="write-header">
           <div>
-            <h2 id="pageTitle">새 게시글 작성</h2>
-            <p id="pageDesc">카테고리를 선택하고 기록할 내용을 작성하세요.</p>
+            <h2 id="pageTitle">새 기록</h2>
+            <p id="pageDesc">분야를 고르고 내용을 적으세요.</p>
           </div>
-          <a href="index.html" class="btn-subtle">홈으로</a>
+          <a id="backLink" href="board.html?category=aiworld" class="btn-subtle">목록으로</a>
         </div>
         <form id="writeForm" enctype="multipart/form-data">
           <input type="hidden" name="id" id="postId" />
           <div class="form-group">
-            <label for="category">카테고리</label>
+            <label for="category">분야</label>
             <select name="category" id="category" class="form-control" required>
               <option value="aiworld">AI 이야기</option>
               <option value="works">만든 것들</option>
@@ -89,7 +80,7 @@
             ></textarea>
           </div>
           <div class="form-group">
-            <label for="files">파일 첨부 (다중 선택 가능)</label>
+            <label for="files">첨부파일</label>
             <input
               type="file"
               name="files[]"
@@ -100,12 +91,13 @@
             />
             <p class="form-help">JPG, PNG, GIF, MP4, PDF · 파일당 20MB 이하 · 한 번에 최대 10개 (서버 제한이 더 작을 수 있습니다)</p>
             <div class="file-list" id="fileList"></div>
-            <div id="existingFiles" style="margin-top: 10px; color: #666"></div>
+            <div id="existingFiles"></div>
           </div>
           <button type="submit" class="btn-submit" id="submitBtn">저장하기</button>
         </form>
       </div>
     </main>
+    <footer class="portal-footer container"><span>joyban.pe.kr</span></footer>
 
     <script>
       function escapeHTML(value) {
@@ -148,16 +140,29 @@
         const category = urlParams.get("category");
         const categorySelect = document.getElementById("category");
 
+        const markCategory = (value) => {
+          document.querySelectorAll(".menu-links a").forEach((link) => {
+            const url = new URL(link.href, window.location.href);
+            link.classList.toggle("active", url.searchParams.get("category") === value);
+          });
+          document.getElementById("backLink").href = `board.html?category=${encodeURIComponent(value)}`;
+        };
+        categorySelect.addEventListener("change", () => markCategory(categorySelect.value));
+
         if (postId && isLoggedIn) {
-          document.getElementById("pageTitle").textContent = "게시글 수정";
-          document.getElementById("pageDesc").textContent = "기존 게시글 내용을 수정하고 필요한 파일을 추가하세요.";
+          document.getElementById("pageTitle").textContent = "기록 수정";
+          document.getElementById("pageDesc").textContent = "내용과 첨부파일을 고칩니다.";
           document.getElementById("postId").value = postId;
           await loadPostData(postId);
+          markCategory(categorySelect.value);
         } else if (
           category &&
           Array.from(categorySelect.options).some((option) => option.value === category)
         ) {
           categorySelect.value = category;
+          markCategory(category);
+        } else {
+          markCategory(categorySelect.value);
         }
       });
 
@@ -171,6 +176,7 @@
             document.getElementById("category").value = post.category;
             document.getElementById("title").value = post.title;
             document.getElementById("content").value = post.content;
+            document.getElementById("backLink").href = `board.html?category=${encodeURIComponent(post.category)}`;
 
             // 기존 파일 목록 표시 (삭제 버튼 포함)
             if (post.media && post.media.length > 0) {
@@ -211,7 +217,7 @@
                     existingHidden.remove();
                   }
                   removeBtn.title = isDeleted ? "삭제 취소" : "이 파일 삭제";
-                  removeBtn.style.color = isDeleted ? "var(--mint)" : "";
+                  removeBtn.style.color = isDeleted ? "var(--accent)" : "";
                 };
 
                 item.appendChild(icon);

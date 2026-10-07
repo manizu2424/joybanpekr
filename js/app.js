@@ -255,10 +255,11 @@ function updateAdminUI(isLoggedIn) {
     adminBtn.parentNode.replaceChild(newBtn, adminBtn);
 
     const icon = newBtn.querySelector('i');
+    const label = newBtn.querySelector('.auth-label');
 
     if (isLoggedIn) {
-        // 로그인 상태: 열린 자물쇠(또는 로그아웃 아이콘), 로그아웃 기능 연결
-        icon.className = 'fas fa-lock-open'; // 또는 fa-sign-out-alt
+        if (icon) icon.className = 'fas fa-lock-open';
+        if (label) label.textContent = '로그아웃';
         newBtn.title = '로그아웃';
         newBtn.addEventListener('click', async (e) => {
             e.preventDefault();
@@ -273,7 +274,7 @@ function updateAdminUI(isLoggedIn) {
         // 1. 게시판 목록 관리자 컨트롤 (글쓰기 버튼)
         const boardControls = document.getElementById('board-admin-controls');
         if (boardControls) {
-            boardControls.style.display = 'block';
+            boardControls.style.display = '';
             const writeBtn = document.getElementById('btn-write');
             const currentCategory = document.body.dataset.currentCategory;
             if (writeBtn && currentCategory) {
@@ -286,7 +287,7 @@ function updateAdminUI(isLoggedIn) {
         // 2. 게시글 상세 관리자 컨트롤 (수정, 삭제 버튼)
         const viewControls = document.getElementById('admin-controls');
         if (viewControls) {
-            viewControls.style.display = 'block';
+            viewControls.style.display = '';
             
             // 수정 버튼
             const btnEdit = document.getElementById('btn-edit');
@@ -316,7 +317,8 @@ function updateAdminUI(isLoggedIn) {
 
     } else {
         // 비로그인 상태: 닫힌 자물쇠, 로그인 기능 연결
-        icon.className = 'fas fa-lock';
+        if (icon) icon.className = 'fas fa-lock';
+        if (label) label.textContent = '로그인';
         newBtn.title = '관리자 로그인';
         newBtn.addEventListener('click', async (e) => {
             e.preventDefault();
@@ -330,10 +332,9 @@ function updateAdminUI(isLoggedIn) {
         
         // 관리자 컨트롤 숨김
         const boardControls = document.getElementById('board-admin-controls');
-        if (boardControls) boardControls.style.display = 'none';
-        
+        if (boardControls) boardControls.style.display = '';
         const viewControls = document.getElementById('admin-controls');
-        if (viewControls) viewControls.style.display = 'none';
+        if (viewControls) viewControls.style.display = '';
     }
 }
 
@@ -413,30 +414,26 @@ async function loadBoardPosts(category, page = 1) {
                 const postItem = document.createElement('article');
                 postItem.className = 'post-item';
                 postItem.onclick = () => location.href = `view.html?id=${post.id}`;
-                
-                // 썸네일 처리
-                let thumbHtml = `
-                    <div class="img-placeholder">
-                        <i class="fas ${meta?.icon || 'fa-file-lines'}"></i>
-                    </div>
-                `;
-                if (post.thumbnail) {
-                    thumbHtml = `<img src="${escapeHTML(post.thumbnail)}" alt="${escapeHTML(post.title)}">`;
-                }
-                const summaryText = String(post.content).trim();
-                
+                const summaryText = String(post.content ?? '').trim();
+                const date = String(post.created_at ?? '').split(' ')[0];
                 postItem.innerHTML = `
-                    <div class="post-thumb">
-                        ${thumbHtml}
-                    </div>
                     <div class="post-info">
                         <h3 class="post-title">${escapeHTML(post.title)}</h3>
                         <p class="post-summary">${escapeHTML(summaryText.substring(0, 150))}${summaryText.length > 150 ? '...' : ''}</p>
-                        <div class="post-meta">
-                            <span class="date">${post.created_at.split(' ')[0]}</span>
-                        </div>
+                    </div>
+                    <div class="post-meta">
+                        <span class="date">${escapeHTML(date)}</span>
                     </div>
                 `;
+                if (post.thumbnail) {
+                    const thumb = document.createElement('div');
+                    thumb.className = 'post-thumb';
+                    const image = document.createElement('img');
+                    image.src = post.thumbnail;
+                    image.alt = '';
+                    thumb.appendChild(image);
+                    postItem.prepend(thumb);
+                }
                 postListContainer.appendChild(postItem);
             });
 
@@ -446,7 +443,6 @@ async function loadBoardPosts(category, page = 1) {
         } else {
             postListContainer.innerHTML = `
                 <div class="empty-state">
-                    <i class="fas ${meta?.icon || 'fa-file-lines'}"></i>
                     <h3>${getCategoryTitle(category)}에 아직 글이 없습니다</h3>
                     <p>첫 글을 등록하면 이곳에 목록이 표시됩니다.</p>
                 </div>
@@ -457,7 +453,6 @@ async function loadBoardPosts(category, page = 1) {
         console.error('Error fetching posts:', error);
         postListContainer.innerHTML = `
             <div class="empty-state error">
-                <i class="fas fa-triangle-exclamation"></i>
                 <h3>게시글을 불러오지 못했습니다</h3>
                 <p>서버 연결 또는 데이터베이스 상태를 확인해주세요.</p>
             </div>
@@ -474,9 +469,8 @@ function renderPagination(totalCount, currentPage, limit, category) {
 
     paginationContainer.innerHTML = ''; // 초기화
 
-    if (totalCount === 0) return;
-
     const totalPages = Math.ceil(totalCount / limit);
+    if (totalCount === 0 || totalPages <= 1) return;
     const maxPagesToShow = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
     let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
@@ -490,7 +484,7 @@ function renderPagination(totalCount, currentPage, limit, category) {
         const prevBtn = document.createElement('a');
         prevBtn.href = '#';
         prevBtn.className = 'page-btn prev';
-        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        prevBtn.textContent = '이전';
         prevBtn.onclick = (e) => {
             e.preventDefault();
             loadBoardPosts(category, currentPage - 1);
@@ -516,7 +510,7 @@ function renderPagination(totalCount, currentPage, limit, category) {
         const nextBtn = document.createElement('a');
         nextBtn.href = '#';
         nextBtn.className = 'page-btn next';
-        nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        nextBtn.textContent = '다음';
         nextBtn.onclick = (e) => {
             e.preventDefault();
             loadBoardPosts(category, currentPage + 1);
@@ -548,7 +542,7 @@ async function loadPostDetail(id) {
             setMetaContent('meta[name="twitter:title"]', `${post.title} - Joyban`);
             setMetaContent('meta[name="twitter:description"]', description);
             document.querySelector('.category-badge').innerText = getCategoryTitle(post.category);
-            document.querySelector('.view-meta .date').innerText = post.created_at;
+            document.querySelector('.view-meta .date').innerText = String(post.created_at ?? '').slice(0, 10);
             //document.querySelector('.view-content').innerHTML = post.content.replace(/\n/g, '<br>');
             const contentP = document.querySelector('.view-content p');
             if (contentP) {
@@ -587,10 +581,7 @@ async function loadPostDetail(id) {
                             const a = document.createElement('a');
                             a.href = cleanPath;
                             a.download = media.original_name || cleanPath.split('/').pop();
-                            a.innerHTML = `<i class="fas fa-file-download"></i> ${escapeHTML(media.original_name || '첨부파일')}`;
-                            a.style.textDecoration = 'none';
-                            a.style.color = '#333';
-                            li.style.marginBottom = '0.5rem';
+                            a.textContent = media.original_name || '첨부파일';
                             li.appendChild(a);
                             fileListUl.appendChild(li);
                             fileListContainer.style.display = 'block';

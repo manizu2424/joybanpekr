@@ -40,7 +40,7 @@ function clearPrivateState() {
 }
 function updateAuthUI() {
     $('auth-button').disabled = false;
-    $('auth-button').textContent = portalState.admin ? '로그아웃' : '관리자 로그인';
+    $('auth-button').textContent = portalState.admin ? '로그아웃' : '로그인';
     $('add-link').hidden = !portalState.admin;
     document.querySelectorAll('[data-admin]').forEach((node) => { node.hidden = !portalState.admin; });
     $('visibility-note').textContent = portalState.admin ? '개인 자료와 공개 자료를 함께 보고 있습니다. 새 자료는 기본 비공개입니다.' : '공개 자료를 둘러보세요. 로그인하면 개인 보관함을 관리할 수 있습니다.';
@@ -73,8 +73,8 @@ function updateFilters() {
         if (button.tagName === 'BUTTON') button.setAttribute('aria-pressed', String(button.dataset.category === portalState.category));
     });
     document.querySelectorAll('[data-view]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.view === portalState.view)));
-    $('library-title').textContent = PORTAL_VIEWS[portalState.view];
-    $('library-kicker').textContent = portalState.category ? PORTAL_CATEGORIES[portalState.category].toUpperCase() : 'YOUR COLLECTION';
+    const viewName = PORTAL_VIEWS[portalState.view];
+    $('library-title').textContent = portalState.category ? PORTAL_CATEGORIES[portalState.category] + ' · ' + viewName : viewName;
     $('active-tag').hidden = !portalState.tag;
     $('active-tag').querySelector('span').textContent = '#' + portalState.tag;
 }
@@ -136,46 +136,47 @@ function action(text, callback, className = '') {
     return button;
 }
 function renderLink(link) {
-    const card = element('article', 'link-card');
+    const row = element('article', 'link-row');
     const url = safeLinkURL(link.url);
-    const top = element('div', 'card-top');
-    top.append(element('span', 'link-monogram', link.title.slice(0, 1).toUpperCase()), element('span', 'card-category', PORTAL_CATEGORIES[link.category] || '기타'));
-    const title = element('h3', 'card-title');
+    const main = element('div', 'link-main');
+    const title = element('h3', 'link-title');
     if (url) {
         const anchor = element('a', '', link.title);
         anchor.href = url.href; anchor.target = '_blank'; anchor.rel = 'noopener noreferrer';
-        anchor.append(element('span', '', '↗')); title.append(anchor);
+        title.append(anchor);
     } else title.textContent = link.title;
-    card.append(top, title, element('p', 'card-host', url?.hostname || '사용할 수 없는 링크'));
-    if (link.description) card.append(element('p', 'card-description', link.description));
-    const tags = element('div', 'card-tags');
+    main.append(title);
+    if (link.description) main.append(element('p', 'link-note', link.description));
+    const aside = element('div', 'link-aside');
+    const facts = element('p', 'link-facts');
+    facts.append(
+        element('span', '', PORTAL_CATEGORIES[link.category] || '기타'),
+        element('span', '', PORTAL_KINDS[link.kind] || '자료'),
+        element('span', '', url ? url.hostname.replace(/^www\./, '') : '사용할 수 없는 링크')
+    );
+    if (!portalState.admin && link.is_favorite) facts.append(element('span', 'link-pin', '고정'));
+    const tags = element('div', 'link-tags');
     (Array.isArray(link.tags) ? link.tags : []).forEach((tag) => {
-        const button = action('#' + tag, () => { portalState.tag = tag; return loadLinks(); });
-        button.setAttribute('aria-label', tag + ' 태그로 검색'); tags.append(button);
+        const button = action(tag, () => { portalState.tag = tag; return loadLinks(); });
+        button.setAttribute('aria-label', tag + ' 태그로 검색');
+        tags.append(button);
     });
-    card.append(tags);
-    const footer = element('div', 'card-footer');
-    const meta = element('div', 'card-meta');
-    meta.append(element('span', '', PORTAL_KINDS[link.kind] || '자료'));
-    if (link.is_favorite) meta.append(element('span', 'card-favorite', '★ 고정'));
+    aside.append(facts, tags);
+    row.append(main, aside);
     if (portalState.admin) {
-        meta.append(element('span', '', link.visibility === 'private' ? '나만 보기' : '공개'));
-        if (link.kind === 'article') meta.append(element('span', '', link.is_read ? '읽음' : '안 읽음'));
-    }
-    footer.append(meta);
-    if (portalState.admin) {
-        const actions = element('div', 'card-actions');
-        actions.append(action(link.is_favorite ? '고정 해제' : '☆ 고정', () => updateLink(link, { is_favorite: !link.is_favorite })));
+        const actions = element('div', 'link-actions');
+        actions.append(element('span', '', link.visibility === 'private' ? '나만 보기' : '공개'));
+        if (link.kind === 'article') actions.append(element('span', '', link.is_read ? '읽음' : '안 읽음'));
+        actions.append(action(link.is_favorite ? '고정 해제' : '고정', () => updateLink(link, { is_favorite: !link.is_favorite })));
         if (link.kind === 'article') actions.append(action(link.is_read ? '읽음 취소' : '읽음', () => updateLink(link, { is_read: !link.is_read })));
         actions.append(action('수정', () => openEditor(link)), action('삭제', async () => {
             if (!await confirmDelete()) return;
             await writeAPI('api/links/delete.php', { id: link.id });
             notify('자료를 삭제했습니다.'); await loadLinks();
         }, 'delete-link'));
-        footer.append(actions);
+        row.append(actions);
     }
-    card.append(footer);
-    return card;
+    return row;
 }
 async function updateLink(link, patch) {
     await writeAPI('api/links/state.php', { id: link.id, ...patch });
